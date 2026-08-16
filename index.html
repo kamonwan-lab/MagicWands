@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make your own Magic Wand!</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; gap: 20px; padding: 20px; background-color: #f9f9f9; }
+        .preview-area { width: 400px; height: 600px; background: #fff; border: 2px dashed #ccc; position: relative; border-radius: 10px; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .controls { flex: 1; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: fit-content; }
+        
+        /* ระบบ Layer (ยิ่งค่าน้อยยิ่งอยู่ล่าง) */
+        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; transition: transform 0.5s ease; display: none; }
+        
+        #fan { z-index: 10; display: block; opacity: 0; transition: opacity 0.3s; } /* ซ่อนใบพัดไว้ก่อน */
+        #handle { z-index: 11; display: block; }
+        #c1-crystal { z-index: 12; }
+        
+        /* Group นี้จะถูกเลื่อนลงเมื่อเปิดโหมดเผยใบพัด */
+        .head-group { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.5s ease; }
+        .head-group.open-mode { transform: translateY(80px); /* เลื่อนลง 80px */ }
+        
+        #base { z-index: 21; }
+        #c2-crystal { z-index: 22; }
+        #wings { z-index: 23; }
+        #main-head { z-index: 24; }
+        #c3-crystal { z-index: 25; }
+        #sub-head { z-index: 26; }
+
+        .section { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        h3 { margin-top: 0; color: #333; font-size: 16px; }
+        button { margin-top: 10px; padding: 10px 15px; background: #ff758c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        button:hover { background: #ff5e78; }
+    </style>
+</head>
+<body>
+
+    <!-- พื้นที่แสดงผลคฑา -->
+    <div class="preview-area">
+        <!-- ภาพใบพัด (อยู่บนสุดของด้ามจับแต่โดนฐานบัง) -->
+        <img id="fan" src="assets/fan_white.png" class="layer" alt="Fan">
+        
+        <!-- [1] ด้ามคฑา -->
+        <img id="handle" src="assets/W1.png" class="layer" alt="Handle">
+        <!-- [6.1] คริสตัลฐานมือจับ -->
+        <img id="c1-crystal" src="assets/C1.png" class="layer" alt="C1">
+
+        <!-- กรุ๊ปส่วนหัวคฑา (สำหรับฟังก์ชันเลื่อนลง) -->
+        <div id="head-group-container" class="head-group">
+            <!-- [2] รองหัวคฑา -->
+            <img id="base" src="assets/W2.png" class="layer" style="display:block;" alt="Base">
+            <!-- [6.2] คริสตัลฐานรอง -->
+            <img id="c2-crystal" src="assets/C2.png" class="layer" alt="C2">
+            <!-- [5] ปีก -->
+            <img id="wings" src="" class="layer" alt="Wings">
+            <!-- [3] หัวคฑาหลัก -->
+            <img id="main-head" src="assets/W3.png" class="layer" style="display:block;" alt="Main Head">
+            <!-- [6.3] คริสตัลรอบหัวคฑา -->
+            <img id="c3-crystal" src="" class="layer" alt="C3">
+            <!-- [4] หัวคฑารอง (Mini) -->
+            <img id="sub-head" src="" class="layer" alt="Sub Head">
+        </div>
+    </div>
+
+    <!-- แผงควบคุม -->
+    <div class="controls">
+        <h2>✨ Make your own Magic Wand! ✨</h2>
+        
+        <div class="section">
+            <h3>[1] สีด้ามคฑา (Handle)</h3>
+            <select id="sel-handle" onchange="updateWand()">
+                <option value="W1">White (W1)</option>
+                <option value="B1">Blue (B1)</option>
+                <option value="P1">Pink (P1)</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h3>[2] รองหัวคฑา (Base)</h3>
+            <select id="sel-base" onchange="updateWand()">
+                <option value="W2">White (W2)</option>
+                <option value="B2">Blue (B2)</option>
+                <option value="P2">Pink (P2)</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h3>[3] หัวคฑาหลัก (Main Head)</h3>
+            <select id="sel-main-type" onchange="updateWand()">
+                <option value="3">หัวใจ (Heart)</option>
+                <option value="4">ดาว 5 แฉก (Star)</option>
+                <option value="5">เกล็ดหิมะ (Snowflake)</option>
+            </select>
+            <select id="sel-main-color" onchange="updateWand()">
+                <option value="W">White (W)</option>
+                <option value="B">Blue (B)</option>
+                <option value="P">Pink (P)</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h3>[4] หัวคฑามินิเสริม (Sub Head - Optional)</h3>
+            <select id="sel-sub-type" onchange="updateWand()">
+                <option value="none">ไม่ใส่ (None)</option>
+                <option value="6">หัวใจมินิ (Heart mini)</option>
+                <option value="7">ดาวมินิ (Star mini)</option>
+                <option value="8">เกล็ดหิมะมินิ (Snowflake mini)</option>
+            </select>
+            <select id="sel-sub-color" onchange="updateWand()">
+                <option value="W">White (W)</option>
+                <option value="B">Blue (B)</option>
+                <option value="P">Pink (P)</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h3>[5] ปีก (Wings)</h3>
+            <select id="sel-wings" onchange="updateWand()">
+                <option value="none">ไม่มีปีก (No)</option>
+                <option value="W9">White Wings (W9)</option>
+                <option value="B9">Blue Wings (B9)</option>
+                <option value="P9">Pink Wings (P9)</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h3>[6] ตกแต่งคริสตัล (Crystals)</h3>
+            <label><input type="checkbox" id="chk-c1" onchange="updateWand()"> รอบฐานมือจับ (C1)</label><br>
+            <label><input type="checkbox" id="chk-c2" onchange="updateWand()"> รอบฐานรองหัวคฑา (C2)</label><br>
+            <label><input type="checkbox" id="chk-c3" onchange="updateWand()"> ตามเส้นรอบรูปหัวคฑา (C3)</label>
+        </div>
+
+        <button onclick="toggleFanMode()">🌪️ แปลงร่าง! (เปิด/ปิด โหมดเผยใบพัด)</button>
+    </div>
+
+    <script>
+        function updateWand() {
+            const path = 'assets/'; // โฟลเดอร์เก็บรูป
+
+            // 1. ด้ามคฑา
+            document.getElementById('handle').src = path + document.getElementById('sel-handle').value + '.png';
+
+            // 2. รองหัวคฑา
+            document.getElementById('base').src = path + document.getElementById('sel-base').value + '.png';
+
+            // 3. หัวคฑาหลัก
+            const mainType = document.getElementById('sel-main-type').value;
+            const mainColor = document.getElementById('sel-main-color').value;
+            document.getElementById('main-head').src = path + mainColor + mainType + '.png';
+
+            // 4. หัวคฑารอง
+            const subType = document.getElementById('sel-sub-type').value;
+            const subHeadImg = document.getElementById('sub-head');
+            if (subType === 'none') {
+                subHeadImg.style.display = 'none';
+            } else {
+                const subColor = document.getElementById('sel-sub-color').value;
+                subHeadImg.src = path + subColor + subType + '.png';
+                subHeadImg.style.display = 'block';
+            }
+
+            // 5. ปีก
+            const wingsValue = document.getElementById('sel-wings').value;
+            const wingsImg = document.getElementById('wings');
+            if (wingsValue === 'none') {
+                wingsImg.style.display = 'none';
+            } else {
+                wingsImg.src = path + wingsValue + '.png';
+                wingsImg.style.display = 'block';
+            }
+
+            // 6. คริสตัล
+            document.getElementById('c1-crystal').style.display = document.getElementById('chk-c1').checked ? 'block' : 'none';
+            document.getElementById('c2-crystal').style.display = document.getElementById('chk-c2').checked ? 'block' : 'none';
+            
+            // C3 ผูกกับ Type ของหัวคฑาหลัก (เช่น C3_heart, C3_star, C3_snowflake)
+            const c3Img = document.getElementById('c3-crystal');
+            if (document.getElementById('chk-c3').checked) {
+                // สร้างชื่อไฟล์ตามหัวหลัก เช่น C3_3.png (สมมติให้ 3=heart)
+                c3Img.src = path + 'C3_type' + mainType + '.png'; 
+                c3Img.style.display = 'block';
+            } else {
+                c3Img.style.display = 'none';
+            }
+        }
+
+        let isFanMode = false;
+        function toggleFanMode() {
+            isFanMode = !isFanMode;
+            const headContainer = document.getElementById('head-group-container');
+            const fan = document.getElementById('fan');
+            
+            if (isFanMode) {
+                headContainer.classList.add('open-mode');
+                fan.style.opacity = '1';
+            } else {
+                headContainer.classList.remove('open-mode');
+                fan.style.opacity = '0';
+            }
+        }
+    </script>
+</body>
+</html>
