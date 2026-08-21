@@ -12,13 +12,16 @@
             --bg-cream: #fffdf5; --text-maroon: #5e1115; --gold: #d4af37; --pink-accent: #ff8ca3; --brown-accent: #8b5a2b;
         }
 
+        /* --- ตั้งค่าภาพพื้นหลังเว็บ --- */
         body {
-            font-family: 'Mali', cursive, sans-serif; background-color: var(--bg-cream); color: var(--text-maroon);
+            font-family: 'Mali', cursive, sans-serif; color: var(--text-maroon);
             margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-            background-image: radial-gradient(circle at top right, #e0f7fa 0%, transparent 20%), radial-gradient(circle at top left, #ffe4e1 0%, transparent 20%);
+            /* ภาพพื้นหลังสำหรับ Desktop / iPad แนวนอน */
+            background: url('assets/page_bg.jpg') center center/cover no-repeat fixed;
+            background-color: var(--bg-cream); /* สีสำรองกรณีรูปโหลดยังไม่ขึ้น */
         }
 
-        .app-container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; position: relative; overflow: hidden; }
+        .app-container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; position: relative; overflow: hidden; background: transparent; }
 
         h1 {
             font-family: 'Playfair Display', serif; color: #fff; text-align: center; font-size: 28px; margin-bottom: 20px;
@@ -49,12 +52,10 @@
 
         .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; }
         .color-radio { display: none; }
-        .color-label {
-            display: inline-block; width: 25px; height: 25px; border-radius: 50%;
-            border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+        .color-label { display: inline-block; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .color-radio:checked + .color-label { border-color: var(--pink-accent); transform: scale(1.3); }
         
+        /* โทนสีตามที่บรีฟ */
         .color-label.white { background-color: #f8f9fa; }
         .color-label.pink { background-color: rgb(250, 173, 255); }
         .color-label.blue { background-color: rgb(122, 228, 255); } 
@@ -64,8 +65,6 @@
         input[type=range] { -webkit-appearance: none; width: 90%; background: transparent; margin: 5px 0; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--pink-accent); cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #fff; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #ffe4e1; border-radius: 3px; border: 1px solid #ffb6c1; }
-        
-        /* สไตล์สำหรับปุ่ม Fixed */
         .fixed-toggle { font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; color: var(--text-maroon); font-weight: bold; background: #fff; padding: 2px 8px; border-radius: 10px; border: 1px solid #ffb6c1; }
 
         .crystal-section { grid-column: span 2; }
@@ -83,20 +82,20 @@
         .btn-yesss { padding: 8px 35px; font-size: 18px; font-weight: bold; font-family: inherit; color: var(--text-maroon); background: #fff; border: 2px solid var(--gold); border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); margin-left: 15px; transition: transform 0.2s; }
         .btn-yesss:hover { transform: scale(1.05); background: #fff9e6; }
 
-        .preview-box { width: 100%; height: 400px; background: url('assets/5.png') center/cover; background-color: #fcfcfc; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        /* Canvas Preview Area ตั้งเป็นรูป bgsave.jpg */
+        .preview-box { width: 100%; height: 400px; background: url('assets/bgsave.jpg') center/cover; background-color: #fcfcfc; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         #screen-result .preview-box { height: 500px; border-color: #ffb6c1; border-width: 3px; border-radius: 20px; }
         .wand-scaler { width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
         .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; }
 
-        /* การตั้งค่า Filter พัดใหม่ */
-        #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(110%) contrast(90%); }
+        /* อัปเดต Filter ของ Fan ล่าสุด */
+        #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(115%) contrast(90%); }
         #hand { z-index: 1; }
         #base { z-index: 2; }
         #wings { z-index: 3; }
         #main-head { z-index: 4; }
         .crystal-layer { z-index: 6; }
 
-        /* แยก Transition ให้ชัดเจน ไม่ให้เกิดอาการดีเลย์หรือกกระตุก */
         .part-head { transition: transform 0.6s ease-in-out; }
         #sub-head, #c-sub-2, #c-sub-4 { z-index: 5; transition: top 0.1s ease-out, transform 0.6s ease-in-out; }
         
@@ -106,14 +105,14 @@
 
         /* Screen 2 Result Controls */
         .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: center; }
-        .bg-controls { display: flex; gap: 10px; align-items: center; background: #fff; padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; }
+        .bg-controls { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; backdrop-filter: blur(5px); }
         .bg-picker { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--text-maroon); cursor: pointer; padding: 0; flex-shrink: 0; }
         .bg-picker::-webkit-color-swatch-wrapper { padding: 0; } .bg-picker::-webkit-color-swatch { border: none; }
         .btn-small { background: #fff0f5; border: 1px solid #ffb6c1; padding: 8px 12px; border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: bold; color: var(--text-maroon); transition: 0.2s; font-size: 13px; }
         .btn-small:hover { background: #ffe4e1; }
         .transparent-label { font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
         .action-buttons { display: flex; gap: 30px; align-items: center; }
-        .push-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #ffffff, #e6e6e6); border: none; box-shadow: 5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff; font-family: inherit; font-weight: 900; font-size: 20px; color: var(--text-maroon); cursor: pointer; transition: all 0.2s; }
+        .push-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #ffffff, #e6e6e6); border: none; box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px #ffffff; font-family: inherit; font-weight: 900; font-size: 20px; color: var(--text-maroon); cursor: pointer; transition: all 0.2s; }
         .push-btn.active { background: #ffffff; box-shadow: inset 5px 5px 10px #d9d9d9, inset -5px -5px 10px #ffffff; color: var(--pink-accent); }
         .btn-save { padding: 10px 30px; font-size: 20px; font-weight: 900; color: var(--text-maroon); background: #fff; border: 2px solid var(--text-maroon); border-radius: 30px; cursor: pointer; font-family: inherit; transition: 0.2s; }
         .btn-save:hover { background: var(--text-maroon); color: #fff; }
@@ -123,6 +122,23 @@
         .sparkle { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px #ffb6c1; animation: pop 1s ease-out forwards; }
         @keyframes pop { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5) translateY(-50px); opacity: 0; } }
         .checkerboard { background-color: transparent !important; background-image: repeating-linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), repeating-linear-gradient(45deg, #f0f0f0 25%, #ffffff 25%, #ffffff 75%, #f0f0f0 75%, #f0f0f0) !important; background-position: 0 0, 20px 20px !important; background-size: 40px 40px !important; }
+
+        /* ========================================= */
+        /* CSS โหมด Mobile-Friendly (หน้าจอมือถือ) */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            body {
+                /* เปลี่ยนไปใช้ page_bg_phone.jpg เมื่อเปิดในมือถือหรือจอแนวตั้ง */
+                background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed;
+            }
+            .controls-grid { grid-template-columns: 1fr; gap: 15px; }
+            .preview-box { height: 320px; }
+            #screen-result .preview-box { height: 400px; }
+            h1 { font-size: 22px; margin-bottom: 15px; }
+            .action-bar { flex-direction: column; gap: 20px; }
+            .bg-controls { width: 100%; padding: 10px; }
+            .action-buttons { gap: 15px; width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -135,7 +151,6 @@
 
             <div class="controls-grid">
                 
-                <!-- ด้ามคฑา -->
                 <div class="control-group">
                     <h3>Handle ด้าม</h3>
                     <div class="color-group">
@@ -146,7 +161,6 @@
                     </div>
                 </div>
 
-                <!-- ฐานรองหัว -->
                 <div class="control-group">
                     <h3>Base ฐานรองหัว</h3>
                     <div class="color-group">
@@ -157,7 +171,6 @@
                     </div>
                 </div>
 
-                <!-- หัวคฑาหลัก -->
                 <div class="control-group">
                     <h3>Main head หัวคฑาหลัก</h3>
                     <div class="shape-selectors">
@@ -173,8 +186,7 @@
                     </div>
                 </div>
                 
-                <!-- หัวคฑาเสริม -->
-                <div class="control-group">
+                <div class="control-group" id="sub-head-group" style="display:none;">
                     <h3>Sub-head หัวคฑาเสริม</h3>
                     <div class="shape-selectors">
                         <label><input type="radio" name="s-shape" value="off" class="shape-radio"><span class="shape-icon" style="font-size: 14px;">❌</span></label>
@@ -197,7 +209,6 @@
                     </div>
                 </div>
 
-                <!-- ปีก -->
                 <div class="control-group">
                     <h3>Wings ปีก</h3>
                     <div class="color-group" style="flex-wrap: wrap;">
@@ -210,7 +221,6 @@
                     </div>
                 </div>
 
-                <!-- คริสตัล -->
                 <div class="control-group crystal-section">
                     <h3>Crystals คริสตัล</h3>
                     <div class="crystal-grid">
@@ -265,7 +275,7 @@
                     <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Background Settings</div>
                     <input type="color" id="bg-color" class="bg-picker" value="#ffffff" onchange="setBgMode('color')" title="เลือกสีพื้นหลัง">
                     <select id="sel-preset-bg" class="btn-small" style="appearance: auto;" onchange="setBgMode('preset')">
-                        <option value="">✨ ซีนสำเร็จรูป...</option>
+                        <option value="assets/bgsave.jpg">✨ ลายกระดาษ (Default)</option>
                         <option value="background/bg1.jpg">ฉากที่ 1 (ตัวอย่าง)</option>
                         <option value="background/bg2.jpg">ฉากที่ 2 (ตัวอย่าง)</option>
                     </select>
@@ -273,7 +283,7 @@
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
                     <label class="transparent-label"><input type="checkbox" id="chk-transparent" onchange="setBgMode('transparent')"> โปร่งใส</label>
                     <img id="uploaded-bg-img" style="display:none;">
-                    <img id="preset-bg-img" style="display:none;">
+                    <img id="preset-bg-img" src="assets/bgsave.jpg" style="display:none;">
                 </div>
 
                 <div class="action-buttons">
@@ -282,7 +292,7 @@
                 </div>
             </div>
             
-            <div style="text-align: right; margin-top: 10px; font-size: 12px; font-style: italic; color: #ff8ca3;">Design by you! &nbsp;&nbsp;&nbsp; By : EmanonMUI</div>
+            <div style="text-align: right; margin-top: 10px; font-size: 12px; font-style: italic; color: #ff8ca3; text-shadow: 1px 1px 0 #fff;">Design by you! &nbsp;&nbsp;&nbsp; By : EmanonMUI</div>
         </div>
 
         <div id="sparkle-container"></div>
@@ -296,7 +306,7 @@
             return el ? el.value : 'none';
         };
 
-        // ระบบคลิกซ้ำเพื่อยกเลิกเลือก (Toggle Radio)
+        // ระบบคลิกซ้ำเพื่อยกเลิกเลือก
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('mousedown', function() {
@@ -314,12 +324,26 @@
                 });
             });
             updateUI(); 
+            // ให้ตั้งค่าเริ่มต้น Background เป็น bgsave.jpg ในหน้า Export
+            document.getElementById('sel-preset-bg').value = 'assets/bgsave.jpg';
         });
 
         function updateUI() {
             const mShape = getRadio('m-shape');
-            const sShape = getRadio('s-shape');
+            const subHeadGroup = document.getElementById('sub-head-group');
 
+            if (mShape === 'none') {
+                subHeadGroup.style.display = 'none'; 
+                document.querySelectorAll('input[name="s-shape"], input[name="s-color"]').forEach(r => {
+                    r.checked = false;
+                    r.dataset.isChecked = 'false';
+                });
+                document.getElementById('chk-sub-crystal').checked = false;
+            } else {
+                subHeadGroup.style.display = 'block'; 
+            }
+            
+            const sShape = getRadio('s-shape');
             const mainMenu = document.getElementById('main-crystal-menu');
             let mHtml = '';
             if (mShape === '3') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> Type 1</label>`; } 
@@ -341,7 +365,6 @@
             if (mShape === 'none') { document.getElementById('chk-main-crystal').checked = false; mainMenu.style.display = 'none'; }
             if (sShape === 'none' || sShape === 'off') { document.getElementById('chk-sub-crystal').checked = false; subMenu.style.display = 'none'; }
             
-            // เช็คว่าถ้าปุ่ม Fixed ไม่ได้ติ๊ก ถึงจะรีเซ็ตค่ากลับ 0
             if (!document.getElementById('chk-fix-y').checked) {
                 document.getElementById('sub-head-y').value = 0;
                 updateSubHeadY();
@@ -456,7 +479,8 @@
             }, 500);
         }
 
-        let currentBgMode = 'color'; 
+        let currentBgMode = 'preset'; // ตั้ง Default ให้เป็นภาพ Preset ของคุณ
+        
         function handleBgUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -546,8 +570,9 @@
                             offsetY += extraY;
                         }
 
+                        // อัปเดต Filter ตอน Save รูป
                         if (id === 'fan') {
-                            ctx.filter = 'brightness(155%) grayscale(120%) contrast(150%)';
+                            ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)';
                         } else {
                             ctx.filter = 'none';
                         }
