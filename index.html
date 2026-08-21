@@ -34,7 +34,6 @@
         .control-group h3 { font-size: 16px; margin: 0 0 10px 0; display: flex; align-items: center; gap: 5px; }
         .control-group h3::before { content: "✦"; color: var(--text-maroon); font-size: 18px; }
 
-        /* --- รูปทรง (Shape Selectors) แบบมีวงกลมรองพื้น --- */
         .shape-selectors { display: flex; justify-content: center; gap: 12px; margin-bottom: 10px; }
         .shape-radio { display: none; }
         .shape-icon { 
@@ -48,7 +47,6 @@
             border-color: var(--pink-accent); background-color: #fff0f5; box-shadow: 0 4px 8px rgba(255, 140, 163, 0.3);
         }
 
-        /* --- วงกลมเลือกสี (Color Swatches) --- */
         .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; }
         .color-radio { display: none; }
         .color-label {
@@ -58,17 +56,18 @@
         .color-radio:checked + .color-label { border-color: var(--pink-accent); transform: scale(1.3); }
         
         .color-label.white { background-color: #f8f9fa; }
-        .color-label.pink { background-color: rgb(250, 173, 255); } /* สีที่คุณบรีฟ */
-        .color-label.blue { background-color: rgb(122, 228, 255); }  /* สีที่คุณบรีฟ */
-        
+        .color-label.pink { background-color: rgb(250, 173, 255); }
+        .color-label.blue { background-color: rgb(122, 228, 255); } 
         .color-text { font-size: 14px; font-weight: bold; color: var(--brown-accent); margin-right: 5px; }
 
         /* Slider Y-Offset สำหรับ Sub-head */
         input[type=range] { -webkit-appearance: none; width: 90%; background: transparent; margin: 5px 0; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--pink-accent); cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #fff; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #ffe4e1; border-radius: 3px; border: 1px solid #ffb6c1; }
+        
+        /* สไตล์สำหรับปุ่ม Fixed */
+        .fixed-toggle { font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; color: var(--text-maroon); font-weight: bold; background: #fff; padding: 2px 8px; border-radius: 10px; border: 1px solid #ffb6c1; }
 
-        /* Crystals Section */
         .crystal-section { grid-column: span 2; }
         .crystal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: start; justify-items: center; }
         .radio-circle { display: none; }
@@ -84,26 +83,23 @@
         .btn-yesss { padding: 8px 35px; font-size: 18px; font-weight: bold; font-family: inherit; color: var(--text-maroon); background: #fff; border: 2px solid var(--gold); border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); margin-left: 15px; transition: transform 0.2s; }
         .btn-yesss:hover { transform: scale(1.05); background: #fff9e6; }
 
-        /* Canvas Preview Area */
         .preview-box { width: 100%; height: 400px; background: url('assets/5.png') center/cover; background-color: #fcfcfc; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         #screen-result .preview-box { height: 500px; border-color: #ffb6c1; border-width: 3px; border-radius: 20px; }
         .wand-scaler { width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
-        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; } /* ซ่อนไว้ก่อน */
+        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; }
 
-        /* 
-           ปรับฟิลเตอร์ใบพัดที่นี่:
-           - brightness: ความสว่างรวม
-           - contrast: เพิ่มความคมชัด (ทำให้เส้นเทาเข้มขึ้น)
-        */
+        /* การตั้งค่า Filter พัดใหม่ */
         #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(110%) contrast(90%); }
         #hand { z-index: 1; }
         #base { z-index: 2; }
         #wings { z-index: 3; }
         #main-head { z-index: 4; }
-        #sub-head { z-index: 5; transition: top 0.1s; }
         .crystal-layer { z-index: 6; }
 
+        /* แยก Transition ให้ชัดเจน ไม่ให้เกิดอาการดีเลย์หรือกกระตุก */
         .part-head { transition: transform 0.6s ease-in-out; }
+        #sub-head, #c-sub-2, #c-sub-4 { z-index: 5; transition: top 0.1s ease-out, transform 0.6s ease-in-out; }
+        
         .part-head.move-down { transform: translateY(500px); }
         #fan.hidden-down { transform: translateY(1000px); opacity: 0; }
         #fan.show-up { transform: translateY(0); opacity: 1; }
@@ -193,7 +189,10 @@
                         <label><input type="radio" name="s-color" value="B" class="color-radio"><span class="color-label blue"></span></label>
                     </div>
                     <div id="sub-head-adjust" style="display:none; text-align: center; margin-top: 10px;">
-                        <span style="font-size: 12px; color: #ff8ca3;">↕ เลื่อนตำแหน่ง (Y-Offset)</span><br>
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 5px;">
+                            <span style="font-size: 12px; color: #ff8ca3;">↕ Y-Offset</span>
+                            <label class="fixed-toggle"><input type="checkbox" id="chk-fix-y"> Fixed</label>
+                        </div>
                         <input type="range" id="sub-head-y" min="-120" max="120" value="0" oninput="updateSubHeadY()">
                     </div>
                 </div>
@@ -211,6 +210,7 @@
                     </div>
                 </div>
 
+                <!-- คริสตัล -->
                 <div class="control-group crystal-section">
                     <h3>Crystals คริสตัล</h3>
                     <div class="crystal-grid">
@@ -232,7 +232,6 @@
             <div class="submit-section">Satisfy? <button class="btn-yesss" onclick="triggerMagicEffect()">YESSS</button></div>
 
             <div class="preview-box">
-                <!-- เปลี่ยนข้อความตรงนี้ -->
                 <div style="position: absolute; top: 10px; left: 15px; font-size: 14px; font-style: italic; color: #ffb6c1; z-index: 10;">sneaky peaky</div>
                 <div class="wand-scaler" id="wand-dom">
                     <img id="fan" src="assets/F0.png" class="layer hidden-down">
@@ -242,6 +241,7 @@
                     <img id="base" src="" class="layer part-head">
                     <img id="wings" src="" class="layer part-head">
                     <img id="main-head" src="" class="layer part-head">
+                    
                     <img id="sub-head" src="" class="layer part-head">
                     <img id="c2-crystal" src="assets/C2.png" class="layer crystal-layer part-head">
                     
@@ -291,16 +291,14 @@
     <script>
         const PATH = 'assets/';
         
-        // Helper ดึงค่าที่โดนเลือก ถ้าไม่มีให้ส่งค่า 'none' กลับไป
         const getRadio = (name) => {
             const el = document.querySelector(`input[name="${name}"]:checked`);
             return el ? el.value : 'none';
         };
 
-        // --- ระบบคลิกซ้ำเพื่อยกเลิกเลือก (Toggle Radio) ---
+        // ระบบคลิกซ้ำเพื่อยกเลิกเลือก (Toggle Radio)
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                // ใช้ mousedown เพื่อเก็บค่าก่อนหน้าที่เบราว์เซอร์จะเปลี่ยนสถานะ
                 radio.addEventListener('mousedown', function() {
                     this.dataset.isChecked = this.checked;
                 });
@@ -315,14 +313,13 @@
                     updateWand();
                 });
             });
-            updateUI(); // โหลดครั้งแรกให้เป็นหน้าว่างๆ
+            updateUI(); 
         });
 
         function updateUI() {
             const mShape = getRadio('m-shape');
             const sShape = getRadio('s-shape');
 
-            // เปลี่ยนจาก C เป็น Type
             const mainMenu = document.getElementById('main-crystal-menu');
             let mHtml = '';
             if (mShape === '3') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> Type 1</label>`; } 
@@ -344,8 +341,12 @@
             if (mShape === 'none') { document.getElementById('chk-main-crystal').checked = false; mainMenu.style.display = 'none'; }
             if (sShape === 'none' || sShape === 'off') { document.getElementById('chk-sub-crystal').checked = false; subMenu.style.display = 'none'; }
             
-            document.getElementById('sub-head-y').value = 0;
-            updateSubHeadY();
+            // เช็คว่าถ้าปุ่ม Fixed ไม่ได้ติ๊ก ถึงจะรีเซ็ตค่ากลับ 0
+            if (!document.getElementById('chk-fix-y').checked) {
+                document.getElementById('sub-head-y').value = 0;
+                updateSubHeadY();
+            }
+            
             updateWand();
         }
 
@@ -370,7 +371,6 @@
         }
 
         function updateWand() {
-            // เช็คว่ามีค่าส่งมาไหม ถ้ามีค่อยแสดงภาพ ถ้าไม่มีให้ซ่อน
             const hVal = getRadio('h-color');
             if (hVal !== 'none') { document.getElementById('hand').src = PATH + hVal + '.png'; document.getElementById('hand').style.display = 'block'; } else { document.getElementById('hand').style.display = 'none'; }
 
@@ -546,9 +546,8 @@
                             offsetY += extraY;
                         }
 
-                        // ใส่ค่า filter ตรงนี้ด้วยให้ตรงกับที่โชว์บนหน้าเว็บ
                         if (id === 'fan') {
-                            ctx.filter = 'brightness(140%) grayscale(100%) contrast(250%)';
+                            ctx.filter = 'brightness(155%) grayscale(120%) contrast(150%)';
                         } else {
                             ctx.filter = 'none';
                         }
