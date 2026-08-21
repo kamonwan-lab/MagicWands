@@ -12,13 +12,11 @@
             --bg-cream: #fffdf5; --text-maroon: #5e1115; --gold: #d4af37; --pink-accent: #ff8ca3; --brown-accent: #8b5a2b;
         }
 
-        /* --- ตั้งค่าภาพพื้นหลังเว็บ --- */
         body {
             font-family: 'Mali', cursive, sans-serif; color: var(--text-maroon);
             margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-            /* ภาพพื้นหลังสำหรับ Desktop / iPad แนวนอน */
             background: url('assets/page_bg.jpg') center center/cover no-repeat fixed;
-            background-color: var(--bg-cream); /* สีสำรองกรณีรูปโหลดยังไม่ขึ้น */
+            background-color: var(--bg-cream); 
         }
 
         .app-container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; position: relative; overflow: hidden; background: transparent; }
@@ -33,35 +31,27 @@
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* UI Controls Screen 1 */
-        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 10px; }
         .control-group h3 { font-size: 16px; margin: 0 0 10px 0; display: flex; align-items: center; gap: 5px; }
         .control-group h3::before { content: "✦"; color: var(--text-maroon); font-size: 18px; }
 
         .shape-selectors { display: flex; justify-content: center; gap: 12px; margin-bottom: 10px; }
         .shape-radio { display: none; }
         .shape-icon { 
-            display: inline-flex; justify-content: center; align-items: center;
-            width: 40px; height: 40px; border-radius: 50%; background-color: #fff; border: 2px solid #ddd;
-            font-size: 20px; cursor: pointer; transition: 0.2s; filter: grayscale(100%) opacity(0.6); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background-color: #fff; border: 2px solid #ddd;
+            font-size: 20px; cursor: pointer; transition: 0.2s; filter: grayscale(100%) opacity(0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .shape-radio:checked + .shape-icon { 
-            filter: grayscale(0%) opacity(1); transform: scale(1.15); 
-            border-color: var(--pink-accent); background-color: #fff0f5; box-shadow: 0 4px 8px rgba(255, 140, 163, 0.3);
-        }
+        .shape-radio:checked + .shape-icon { filter: grayscale(0%) opacity(1); transform: scale(1.15); border-color: var(--pink-accent); background-color: #fff0f5; box-shadow: 0 4px 8px rgba(255, 140, 163, 0.3); }
 
         .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; }
         .color-radio { display: none; }
         .color-label { display: inline-block; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .color-radio:checked + .color-label { border-color: var(--pink-accent); transform: scale(1.3); }
-        
-        /* โทนสีตามที่บรีฟ */
         .color-label.white { background-color: #f8f9fa; }
         .color-label.pink { background-color: rgb(250, 173, 255); }
         .color-label.blue { background-color: rgb(122, 228, 255); } 
         .color-text { font-size: 14px; font-weight: bold; color: var(--brown-accent); margin-right: 5px; }
 
-        /* Slider Y-Offset สำหรับ Sub-head */
         input[type=range] { -webkit-appearance: none; width: 90%; background: transparent; margin: 5px 0; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--pink-accent); cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #fff; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #ffe4e1; border-radius: 3px; border: 1px solid #ffb6c1; }
@@ -78,27 +68,27 @@
         .sub-crystal-menu { display: none; flex-direction: column; gap: 5px; margin-top: 10px; padding: 10px; background: #fff9e6; border-radius: 10px; border: 1px dashed var(--gold); width: 100%; font-size: 14px;}
         .sub-crystal-menu label { cursor: pointer; }
 
-        .submit-section { text-align: center; margin: 20px 0; font-weight: bold; font-size: 18px; }
+        .submit-section { text-align: center; margin: 15px 0; font-weight: bold; font-size: 18px; }
         .btn-yesss { padding: 8px 35px; font-size: 18px; font-weight: bold; font-family: inherit; color: var(--text-maroon); background: #fff; border: 2px solid var(--gold); border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); margin-left: 15px; transition: transform 0.2s; }
         .btn-yesss:hover { transform: scale(1.05); background: #fff9e6; }
 
-        /* Canvas Preview Area ตั้งเป็นรูป bgsave.jpg */
-        .preview-box { width: 100%; height: 400px; background: url('assets/bgsave.jpg') center/cover; background-color: #fcfcfc; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        /* พรีวิวเป็นสีขาวบริสุทธิ์และใช้ bgsave_2 เป็นค่าเริ่มต้น */
+        .preview-box { width: 100%; height: 400px; background: #ffffff; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         #screen-result .preview-box { height: 500px; border-color: #ffb6c1; border-width: 3px; border-radius: 20px; }
         .wand-scaler { width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
         .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; }
 
-        /* อัปเดต Filter ของ Fan ล่าสุด */
+        /* ฟิลเตอร์ของ Fan */
         #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(115%) contrast(90%); }
         #hand { z-index: 1; }
         #base { z-index: 2; }
         #wings { z-index: 3; }
         #main-head { z-index: 4; }
+        #sub-head, #c-sub-2, #c-sub-4 { z-index: 5; transition: top 0.1s ease-out, transform 0.6s ease-in-out; }
         .crystal-layer { z-index: 6; }
+        #text-canvas { z-index: 20; display: block; } 
 
         .part-head { transition: transform 0.6s ease-in-out; }
-        #sub-head, #c-sub-2, #c-sub-4 { z-index: 5; transition: top 0.1s ease-out, transform 0.6s ease-in-out; }
-        
         .part-head.move-down { transform: translateY(500px); }
         #fan.hidden-down { transform: translateY(1000px); opacity: 0; }
         #fan.show-up { transform: translateY(0); opacity: 1; }
@@ -123,19 +113,12 @@
         @keyframes pop { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5) translateY(-50px); opacity: 0; } }
         .checkerboard { background-color: transparent !important; background-image: repeating-linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), repeating-linear-gradient(45deg, #f0f0f0 25%, #ffffff 25%, #ffffff 75%, #f0f0f0 75%, #f0f0f0) !important; background-position: 0 0, 20px 20px !important; background-size: 40px 40px !important; }
 
-        /* ========================================= */
-        /* CSS โหมด Mobile-Friendly (หน้าจอมือถือ) */
-        /* ========================================= */
         @media (max-width: 768px) {
-            body {
-                /* เปลี่ยนไปใช้ page_bg_phone.jpg เมื่อเปิดในมือถือหรือจอแนวตั้ง */
-                background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed;
-            }
+            body { background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed; }
             .controls-grid { grid-template-columns: 1fr; gap: 15px; }
-            .preview-box { height: 320px; }
-            #screen-result .preview-box { height: 400px; }
+            .preview-box { height: 320px; } #screen-result .preview-box { height: 400px; }
             h1 { font-size: 22px; margin-bottom: 15px; }
-            .action-bar { flex-direction: column; gap: 20px; }
+            .action-bar { flex-direction: column; gap: 15px; }
             .bg-controls { width: 100%; padding: 10px; }
             .action-buttons { gap: 15px; width: 100%; justify-content: center; }
         }
@@ -145,7 +128,7 @@
 
     <div class="app-container">
         
-        <!-- SCREEN 1: BUILDER -->
+        <!-- ================= SCREEN 1: BUILDER ================= -->
         <div id="screen-builder">
             <h1>Make your own Magic Wand!</h1>
 
@@ -239,10 +222,22 @@
                 </div>
             </div>
 
+            <!-- เมนูจัดการข้อความ & สุ่มคำอวยพร -->
+            <div style="display: flex; flex-direction: column; align-items: center; margin-top: 5px; font-size: 14px; color: var(--text-maroon); font-weight: bold; gap: 8px;">
+                <div>
+                    <label style="cursor: pointer;"><input type="checkbox" id="chk-show-text-1" checked onchange="syncTextConfig('1')"> ✨ ใส่ข้อความอวยพร</label>
+                    <input type="color" id="text-color-1" value="#ff6b81" class="bg-picker" style="width:20px; height:20px; vertical-align: middle; margin-left: 5px;" onchange="syncTextConfig('1')">
+                </div>
+                <div style="display: flex; gap: 5px; align-items: center; width: 100%; justify-content: center;">
+                    <input type="text" id="greeting-text-1" value="✨May your life be magical!✨" style="padding: 6px 12px; border-radius: 15px; border: 1px solid var(--gold); text-align: center; font-family: inherit; width: 70%; font-size: 12px;" oninput="syncTextConfig('1')">
+                    <button type="button" onclick="randomGreeting('1')" title="สุ่มข้อความ" style="background: #fff0f5; border: 1px solid #ffb6c1; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px;">🎲</button>
+                </div>
+            </div>
+
             <div class="submit-section">Satisfy? <button class="btn-yesss" onclick="triggerMagicEffect()">YESSS</button></div>
 
             <div class="preview-box">
-                <div style="position: absolute; top: 10px; left: 15px; font-size: 14px; font-style: italic; color: #ffb6c1; z-index: 10;">sneaky peaky</div>
+                <div style="position: absolute; top: 10px; left: 15px; font-size: 14px; font-style: italic; color: #ffb6c1; z-index: 30;">sneaky peaky</div>
                 <div class="wand-scaler" id="wand-dom">
                     <img id="fan" src="assets/F0.png" class="layer hidden-down">
                     <img id="hand" src="" class="layer">
@@ -259,11 +254,13 @@
                     <img id="c-main-3" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-2" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-4" src="" class="layer crystal-layer part-head">
+
+                    <canvas id="text-canvas" width="2048" height="2048" class="layer"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- SCREEN 2: RESULT -->
+        <!-- ================= SCREEN 2: RESULT ================= -->
         <div id="screen-result">
             <button class="btn-back" onclick="backToDesign()">↺ Back to Edit</button>
             <h1 style="color: var(--text-maroon); text-shadow: 2px 2px 0 #fff; margin-top: 30px;">Wow incredible Magic Wand!</h1>
@@ -272,18 +269,31 @@
 
             <div class="action-bar">
                 <div class="bg-controls">
-                    <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Background Settings</div>
+                    <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Settings</div>
+                    
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 5px;">
+                        <label class="transparent-label"><input type="checkbox" id="chk-show-text-2" checked onchange="syncTextConfig('2')"> ✨ ข้อความอวยพร</label>
+                        <input type="color" id="text-color-2" class="bg-picker" value="#ff6b81" style="width:20px; height:20px;" onchange="syncTextConfig('2')" title="สีข้อความอวยพร">
+                    </div>
+                    <div style="display: flex; gap: 5px; align-items: center; width: 100%; justify-content: center;">
+                        <input type="text" id="greeting-text-2" value="✨May your life be magical!✨" style="padding: 6px; border-radius: 10px; border: 1px solid var(--gold); text-align: center; font-family: inherit; width: 70%; font-size: 12px;" oninput="syncTextConfig('2')">
+                        <button type="button" onclick="randomGreeting('2')" class="btn-small" style="padding: 5px 8px;">🎲 สุ่ม</button>
+                    </div>
+                    
+                    <div style="width: 100%; height: 1px; background: #ffe4e1; margin: 8px 0;"></div>
+
                     <input type="color" id="bg-color" class="bg-picker" value="#ffffff" onchange="setBgMode('color')" title="เลือกสีพื้นหลัง">
                     <select id="sel-preset-bg" class="btn-small" style="appearance: auto;" onchange="setBgMode('preset')">
-                        <option value="assets/bgsave.jpg">✨ ลายกระดาษ (Default)</option>
-                        <option value="background/bg1.jpg">ฉากที่ 1 (ตัวอย่าง)</option>
-                        <option value="background/bg2.jpg">ฉากที่ 2 (ตัวอย่าง)</option>
+                        <option value="assets/bgsave_2.jpg">✨ ลายกระดาษ (Default)</option>
+                        <option value="assets/bgsave1.jpg">ฉากที่ 1 (กำลังพัฒนาจ้า)</option>
+                        <option value="assets/bgsave2.jpg">ฉากที่ 2 (กำลังพัฒนาจ้า)</option>
                     </select>
                     <button class="btn-small" onclick="document.getElementById('bg-upload').click()">🖼️ อัปโหลด</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
                     <label class="transparent-label"><input type="checkbox" id="chk-transparent" onchange="setBgMode('transparent')"> โปร่งใส</label>
+                    
                     <img id="uploaded-bg-img" style="display:none;">
-                    <img id="preset-bg-img" src="assets/bgsave.jpg" style="display:none;">
+                    <img id="preset-bg-img" src="assets/bgsave_2.jpg" style="display:none;">
                 </div>
 
                 <div class="action-buttons">
@@ -300,33 +310,99 @@
 
     <script>
         const PATH = 'assets/';
+        const greetingsList = [
+            "✨May your life be magical!✨",
+            "✨Balachoo Bachoo!✨",
+            "✨Le poof! all bad things are gone!✨"
+        ];
         
         const getRadio = (name) => {
             const el = document.querySelector(`input[name="${name}"]:checked`);
             return el ? el.value : 'none';
         };
 
-        // ระบบคลิกซ้ำเพื่อยกเลิกเลือก
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('mousedown', function() {
-                    this.dataset.isChecked = this.checked;
-                });
+                radio.addEventListener('mousedown', function() { this.dataset.isChecked = this.checked; });
                 radio.addEventListener('click', function() {
-                    if (this.dataset.isChecked === 'true') {
-                        this.checked = false;
-                        this.dataset.isChecked = 'false';
-                    } else {
-                        this.dataset.isChecked = 'true';
-                    }
-                    updateUI();
-                    updateWand();
+                    if (this.dataset.isChecked === 'true') { this.checked = false; this.dataset.isChecked = 'false'; } 
+                    else { this.dataset.isChecked = 'true'; }
+                    updateUI(); updateWand();
                 });
             });
             updateUI(); 
-            // ให้ตั้งค่าเริ่มต้น Background เป็น bgsave.jpg ในหน้า Export
-            document.getElementById('sel-preset-bg').value = 'assets/bgsave.jpg';
+            document.getElementById('sel-preset-bg').value = 'assets/bgsave_2.jpg';
+            document.fonts.ready.then(() => { updateTextPreview(); });
         });
+
+        // --- ระบบสุ่มข้อความอวยพร ---
+        function randomGreeting(source) {
+            const randomText = greetingsList[Math.floor(Math.random() * greetingsList.length)];
+            document.getElementById('greeting-text-' + source).value = randomText;
+            syncTextConfig(source);
+        }
+
+        // --- ระบบวาดข้อความโค้งบน Canvas ---
+        function syncTextConfig(source) {
+            let isChecked, color, text;
+            if (source === '1') {
+                isChecked = document.getElementById('chk-show-text-1').checked; 
+                color = document.getElementById('text-color-1').value;
+                text = document.getElementById('greeting-text-1').value;
+                
+                document.getElementById('chk-show-text-2').checked = isChecked; 
+                document.getElementById('text-color-2').value = color;
+                document.getElementById('greeting-text-2').value = text;
+            } else {
+                isChecked = document.getElementById('chk-show-text-2').checked; 
+                color = document.getElementById('text-color-2').value;
+                text = document.getElementById('greeting-text-2').value;
+                
+                document.getElementById('chk-show-text-1').checked = isChecked; 
+                document.getElementById('text-color-1').value = color;
+                document.getElementById('greeting-text-1').value = text;
+            }
+            updateTextPreview();
+        }
+
+        function updateTextPreview() {
+            const tCanvas = document.getElementById('text-canvas');
+            const ctx = tCanvas.getContext('2d');
+            ctx.clearRect(0, 0, 2048, 2048);
+
+            if (!document.getElementById('chk-show-text-1').checked) {
+                tCanvas.style.display = 'none'; return;
+            }
+            tCanvas.style.display = 'block';
+
+            const text = document.getElementById('greeting-text-1').value || " ";
+            const color = document.getElementById('text-color-1').value;
+
+            ctx.save();
+            ctx.font = "bold 95px 'Playfair Display', serif"; 
+            ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.lineWidth = 15; ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; ctx.lineJoin = "round";
+
+            const centerX = 1024; const centerY = 1350; const radius = 1150; 
+            ctx.translate(centerX, centerY);
+
+            const totalWidth = ctx.measureText(text).width;
+            let currentAngle = -(totalWidth / radius) / 2;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const charWidth = ctx.measureText(char).width;
+                currentAngle += (charWidth / 2) / radius;
+
+                ctx.save();
+                ctx.rotate(currentAngle); ctx.translate(0, -radius);
+                ctx.strokeText(char, 0, 0); ctx.fillStyle = color; ctx.fillText(char, 0, 0);
+                ctx.restore();
+
+                currentAngle += (charWidth / 2) / radius;
+            }
+            ctx.restore();
+        }
 
         function updateUI() {
             const mShape = getRadio('m-shape');
@@ -334,10 +410,7 @@
 
             if (mShape === 'none') {
                 subHeadGroup.style.display = 'none'; 
-                document.querySelectorAll('input[name="s-shape"], input[name="s-color"]').forEach(r => {
-                    r.checked = false;
-                    r.dataset.isChecked = 'false';
-                });
+                document.querySelectorAll('input[name="s-shape"], input[name="s-color"]').forEach(r => { r.checked = false; r.dataset.isChecked = 'false'; });
                 document.getElementById('chk-sub-crystal').checked = false;
             } else {
                 subHeadGroup.style.display = 'block'; 
@@ -353,10 +426,7 @@
 
             const subMenu = document.getElementById('sub-crystal-menu');
             let sHtml = '';
-            if (sShape === 'none' || sShape === 'off') { 
-                sHtml = '<small style="color:#999;">No sub-head selected</small>'; 
-                document.getElementById('chk-sub-crystal').checked = false; 
-            } 
+            if (sShape === 'none' || sShape === 'off') { sHtml = '<small style="color:#999;">No sub-head selected</small>'; document.getElementById('chk-sub-crystal').checked = false; } 
             else if (sShape === '6') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> Type 1</label>`; } 
             else if (sShape === '7') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="handleStarCrystals('cs_2')"> Type 1</label><br><label><input type="checkbox" id="cs_4" onchange="handleStarCrystals('cs_4')"> Type 2</label>`; } 
             else if (sShape === '8') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> Type 1</label>`; }
@@ -365,11 +435,7 @@
             if (mShape === 'none') { document.getElementById('chk-main-crystal').checked = false; mainMenu.style.display = 'none'; }
             if (sShape === 'none' || sShape === 'off') { document.getElementById('chk-sub-crystal').checked = false; subMenu.style.display = 'none'; }
             
-            if (!document.getElementById('chk-fix-y').checked) {
-                document.getElementById('sub-head-y').value = 0;
-                updateSubHeadY();
-            }
-            
+            if (!document.getElementById('chk-fix-y').checked) { document.getElementById('sub-head-y').value = 0; updateSubHeadY(); }
             updateWand();
         }
 
@@ -389,8 +455,7 @@
         function updateSubHeadY() {
             const yOffset = document.getElementById('sub-head-y').value + 'px';
             document.getElementById('sub-head').style.top = yOffset;
-            document.getElementById('c-sub-2').style.top = yOffset;
-            document.getElementById('c-sub-4').style.top = yOffset;
+            document.getElementById('c-sub-2').style.top = yOffset; document.getElementById('c-sub-4').style.top = yOffset;
         }
 
         function updateWand() {
@@ -400,38 +465,24 @@
             const bVal = getRadio('b-color');
             if (bVal !== 'none') { document.getElementById('base').src = PATH + bVal + '.png'; document.getElementById('base').style.display = 'block'; } else { document.getElementById('base').style.display = 'none'; }
             
-            const mShape = getRadio('m-shape'); 
-            const mColor = getRadio('m-color');
-            if (mShape !== 'none' && mColor !== 'none') {
-                document.getElementById('main-head').src = PATH + mColor + mShape + '.png';
-                document.getElementById('main-head').style.display = 'block';
-            } else {
-                document.getElementById('main-head').style.display = 'none';
-            }
+            const mShape = getRadio('m-shape'); const mColor = getRadio('m-color');
+            if (mShape !== 'none' && mColor !== 'none') { document.getElementById('main-head').src = PATH + mColor + mShape + '.png'; document.getElementById('main-head').style.display = 'block'; } else { document.getElementById('main-head').style.display = 'none'; }
 
-            const sShape = getRadio('s-shape'); 
-            const sColor = getRadio('s-color');
-            const subHead = document.getElementById('sub-head');
+            const sShape = getRadio('s-shape'); const sColor = getRadio('s-color'); const subHead = document.getElementById('sub-head');
             if (sShape === 'none' || sShape === 'off' || sColor === 'none') { 
-                subHead.style.display = 'none'; 
-                document.getElementById('sub-head-adjust').style.display = 'none';
+                subHead.style.display = 'none'; document.getElementById('sub-head-adjust').style.display = 'none';
             } else { 
-                subHead.src = PATH + sColor + sShape + '.png'; 
-                subHead.style.display = 'block'; 
-                document.getElementById('sub-head-adjust').style.display = 'block';
+                subHead.src = PATH + sColor + sShape + '.png'; subHead.style.display = 'block'; document.getElementById('sub-head-adjust').style.display = 'block';
             }
 
-            const wing = getRadio('w-color'); 
-            const wingsImg = document.getElementById('wings');
+            const wing = getRadio('w-color'); const wingsImg = document.getElementById('wings');
             if (wing === 'none' || wing === 'off') { wingsImg.style.display = 'none'; } else { wingsImg.src = PATH + wing + '.png'; wingsImg.style.display = 'block'; }
 
             document.getElementById('c1-crystal').style.display = document.getElementById('chk-c1').checked ? 'block' : 'none';
             document.getElementById('c2-crystal').style.display = document.getElementById('chk-c2').checked ? 'block' : 'none';
 
-            document.getElementById('c-main-1').style.display = 'none';
-            document.getElementById('c-main-3').style.display = 'none';
-            document.getElementById('c-sub-2').style.display = 'none';
-            document.getElementById('c-sub-4').style.display = 'none';
+            document.getElementById('c-main-1').style.display = 'none'; document.getElementById('c-main-3').style.display = 'none';
+            document.getElementById('c-sub-2').style.display = 'none'; document.getElementById('c-sub-4').style.display = 'none';
 
             if (document.getElementById('chk-main-crystal').checked && mShape !== 'none') {
                 const mPrefix = mShape === '3' ? 'C3' : (mShape === '4' ? 'C4' : 'C5');
@@ -479,8 +530,7 @@
             }, 500);
         }
 
-        let currentBgMode = 'preset'; // ตั้ง Default ให้เป็นภาพ Preset ของคุณ
-        
+        let currentBgMode = 'preset'; 
         function handleBgUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -564,22 +614,10 @@
                     const img = new Image(); img.crossOrigin = "anonymous";
                     img.onload = () => { 
                         let offsetY = imgEl.classList.contains('move-down') ? 500 : 0; 
+                        if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { const extraY = parseInt(document.getElementById('sub-head-y').value) || 0; offsetY += extraY; }
                         
-                        if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') {
-                            const extraY = parseInt(document.getElementById('sub-head-y').value) || 0;
-                            offsetY += extraY;
-                        }
-
-                        // อัปเดต Filter ตอน Save รูป
-                        if (id === 'fan') {
-                            ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)';
-                        } else {
-                            ctx.filter = 'none';
-                        }
-                        
-                        ctx.drawImage(img, 0, offsetY, 2048, 2048); 
-                        ctx.filter = 'none'; 
-                        resolve(); 
+                        if (id === 'fan') { ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)'; } else { ctx.filter = 'none'; }
+                        ctx.drawImage(img, 0, offsetY, 2048, 2048); ctx.filter = 'none'; resolve(); 
                     };
                     img.onerror = resolve; img.src = imgEl.src;
                 });
@@ -588,14 +626,11 @@
             await drawImg('fan'); await drawImg('hand'); await drawImg('base');
             await drawImg('wings'); await drawImg('main-head'); await drawImg('sub-head');
             await drawImg('c1-crystal'); await drawImg('c2-crystal');
-            
-            await drawImg('c-main-1'); await drawImg('c-main-3');
-            await drawImg('c-sub-2'); await drawImg('c-sub-4');
+            await drawImg('c-main-1'); await drawImg('c-main-3'); await drawImg('c-sub-2'); await drawImg('c-sub-4');
 
-            ctx.font = "bold 90px 'Playfair Display', serif"; ctx.textAlign = "center"; ctx.lineJoin = "round";
-            ctx.lineWidth = 15; ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
-            ctx.strokeText("May your life be magical!", 1024, 180);
-            ctx.fillStyle = "#ff6b81"; ctx.fillText("May your life be magical!", 1024, 180);
+            if (document.getElementById('chk-show-text-1').checked) {
+                ctx.drawImage(document.getElementById('text-canvas'), 0, 0);
+            }
 
             ctx.font = "italic 36px 'Mali', sans-serif"; ctx.fillStyle = "#5e1115"; ctx.textAlign = "right";
             ctx.lineWidth = 5; ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
