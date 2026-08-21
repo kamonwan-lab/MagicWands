@@ -35,7 +35,6 @@
         .control-group h3 { font-size: 16px; margin: 0 0 10px 0; display: flex; align-items: center; gap: 5px; }
         .control-group h3::before { content: "✦"; color: var(--text-maroon); font-size: 18px; }
 
-        /* การจัดกลุ่มให้ขึ้นบรรทัดใหม่เมื่อจอมือถือเล็กป้องกันปุ่มซ้อนทับกัน */
         .shape-selectors { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; position: relative; z-index: 10; }
         .shape-radio { display: none; }
         .shape-icon { 
@@ -78,11 +77,9 @@
         .wand-scaler { width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
         .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; }
 
-        /* บังคับซ่อนข้อความอวยพรในหน้าออกแบบ */
         #screen-builder #text-canvas { display: none !important; }
         #text-canvas { z-index: 20; display: block; } 
 
-        /* ฟิลเตอร์ของ Fan */
         #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(115%) contrast(90%); }
         #hand { z-index: 1; }
         #base { z-index: 2; }
@@ -96,7 +93,6 @@
         #fan.hidden-down { transform: translateY(1000px); opacity: 0; }
         #fan.show-up { transform: translateY(0); opacity: 1; }
 
-        /* Screen 2 Result Controls */
         .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: center; }
         .bg-controls { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; backdrop-filter: blur(5px); }
         .bg-picker { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--text-maroon); cursor: pointer; padding: 0; flex-shrink: 0; }
@@ -116,9 +112,12 @@
         @keyframes pop { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5) translateY(-50px); opacity: 0; } }
         .checkerboard { background-color: transparent !important; background-image: repeating-linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), repeating-linear-gradient(45deg, #f0f0f0 25%, #ffffff 25%, #ffffff 75%, #f0f0f0 75%, #f0f0f0) !important; background-position: 0 0, 20px 20px !important; background-size: 40px 40px !important; }
 
+        /* Modal สำหรับ iOS Safari Fallback */
+        .save-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
+        .save-modal-content { background: var(--bg-cream); padding: 20px; border-radius: 20px; text-align: center; width: 100%; max-width: 450px; border: 3px solid #ffccd5; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
         @media (max-width: 768px) {
             body { background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed; }
-            /* ปรับให้แต่ละกรุ๊ปเรียงลงมาเป็นบรรทัดเต็มๆ (1 คอลัมน์) ตามรีเควส */
             .controls-grid { grid-template-columns: 1fr; gap: 20px; }
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
             .control-group:last-child { border-bottom: none; }
@@ -238,20 +237,15 @@
                     <img id="fan" src="assets/F0.png" class="layer hidden-down">
                     <img id="hand" src="" class="layer">
                     <img id="c1-crystal" src="assets/C1.png" class="layer crystal-layer">
-                    
                     <img id="base" src="" class="layer part-head">
                     <img id="wings" src="" class="layer part-head">
                     <img id="main-head" src="" class="layer part-head">
-                    
                     <img id="sub-head" src="" class="layer part-head">
                     <img id="c2-crystal" src="assets/C2.png" class="layer crystal-layer part-head">
-                    
                     <img id="c-main-1" src="" class="layer crystal-layer part-head">
                     <img id="c-main-3" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-2" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-4" src="" class="layer crystal-layer part-head">
-
-                    <!-- Canvas ข้อความถูกซ่อนในหน้านี้ด้วย CSS -->
                     <canvas id="text-canvas" width="2048" height="2048" class="layer"></canvas>
                 </div>
             </div>
@@ -268,7 +262,6 @@
                 <div class="bg-controls">
                     <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Settings</div>
                     
-                    <!-- เครื่องมือตั้งค่าข้อความอวยพร ย้ายมาอยู่แค่หน้า 2 เท่านั้น -->
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 5px;">
                         <label class="transparent-label"><input type="checkbox" id="chk-show-text" checked onchange="updateTextPreview()"> ✨ ข้อความอวยพร</label>
                         <input type="color" id="text-color" class="bg-picker" value="#ff6b81" style="width:20px; height:20px;" onchange="updateTextPreview()" title="สีข้อความอวยพร">
@@ -287,8 +280,8 @@
                     <input type="color" id="bg-color" class="bg-picker" value="#ffffff" onchange="setBgMode('color')" title="เลือกสีพื้นหลัง">
                     <select id="sel-preset-bg" class="btn-small" style="appearance: auto;" onchange="setBgMode('preset')">
                         <option value="assets/bgsave_2.jpg">✨ ลายกระดาษ (Default)</option>
-                        <option value="assets/bgsave1.jpg">ฉากที่ 1 </option>
-                        <option value="assets/bgsave2.jpg">ฉากที่ 2 </option>
+                        <option value="assets/bgsave1.jpg">ฉากที่ 1 (กำลังพัฒนาจ้า)</option>
+                        <option value="assets/bgsave2.jpg">ฉากที่ 2 (กำลังพัฒนาจ้า)</option>
                     </select>
                     <button class="btn-small" onclick="document.getElementById('bg-upload').click()">🖼️ อัปโหลด</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
@@ -308,6 +301,21 @@
         </div>
 
         <div id="sparkle-container"></div>
+        
+        <!-- Modal แจ้งเตือนเซฟรูปสำหรับ iOS Safari -->
+        <div id="save-modal" class="save-modal-overlay">
+            <div class="save-modal-content">
+                <h2 style="margin-top: 0; color: var(--pink-accent); font-size: 22px;">🪄 เสร็จสมบูรณ์!</h2>
+                <p style="color: var(--text-maroon); font-size: 14px; margin-bottom: 15px; line-height: 1.5;">
+                    หากภาพไม่ดาวน์โหลดอัตโนมัติ<br>ให้ <b>"แตะค้างที่รูปภาพด้านล่าง"</b> แล้วเลือกบันทึก ⬇️
+                </p>
+                <div style="max-height: 45vh; overflow-y: auto; border-radius: 15px; margin-bottom: 20px; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <img id="final-img-preview" src="" style="width: 100%; height: auto; display: block;">
+                </div>
+                <button onclick="document.getElementById('save-modal').style.display='none'" class="btn-save" style="font-size: 16px; padding: 8px 40px;">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -337,14 +345,12 @@
             document.fonts.ready.then(() => { updateTextPreview(); });
         });
 
-        // --- ระบบสุ่มข้อความอวยพร ---
         function randomGreeting() {
             const randomText = greetingsList[Math.floor(Math.random() * greetingsList.length)];
             document.getElementById('greeting-text').value = randomText;
             updateTextPreview();
         }
 
-        // --- ระบบวาดข้อความโค้งบน Canvas ---
         function updateTextPreview() {
             const tCanvas = document.getElementById('text-canvas');
             const ctx = tCanvas.getContext('2d');
@@ -364,10 +370,7 @@
             ctx.textAlign = "center"; ctx.textBaseline = "middle";
             ctx.lineWidth = 15; ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; ctx.lineJoin = "round";
 
-            // ปรับแกน Y ข้อความตาม Slider
-            const centerX = 1024; 
-            const centerY = 1350 + yOffset; 
-            const radius = 1150; 
+            const centerX = 1024; const centerY = 1350 + yOffset; const radius = 1150; 
             ctx.translate(centerX, centerY);
 
             const totalWidth = ctx.measureText(text).width;
@@ -396,9 +399,7 @@
                 subHeadGroup.style.display = 'none'; 
                 document.querySelectorAll('input[name="s-shape"], input[name="s-color"]').forEach(r => { r.checked = false; r.dataset.isChecked = 'false'; });
                 document.getElementById('chk-sub-crystal').checked = false;
-            } else {
-                subHeadGroup.style.display = 'block'; 
-            }
+            } else { subHeadGroup.style.display = 'block'; }
             
             const sShape = getRadio('s-shape');
             const mainMenu = document.getElementById('main-crystal-menu');
@@ -549,9 +550,7 @@
                     if (presetPath) {
                         document.getElementById('preset-bg-img').src = presetPath; 
                         wandDom.style.background = `url(${presetPath}) center/cover no-repeat`;
-                    } else {
-                        setBgMode('color'); 
-                    }
+                    } else { setBgMode('color'); }
                 } else if (mode === 'upload') {
                     const uploadedSrc = document.getElementById('uploaded-bg-img').src;
                     wandDom.style.background = `url(${uploadedSrc}) center/cover no-repeat`;
@@ -573,12 +572,16 @@
             }
         }
 
+        // ==========================================
+        // อัปเดตระบบ Export ช่วยแก้ปัญหาบน iOS Safari
+        // ==========================================
         async function exportToImage() {
             const btn = document.querySelector('.btn-save'); btn.innerHTML = "Saving...";
             
             const canvas = document.createElement('canvas'); canvas.width = 2048; canvas.height = 2048;
             const ctx = canvas.getContext('2d');
 
+            // 1. วาดพื้นหลัง
             if (currentBgMode !== 'transparent') {
                 if (currentBgMode === 'color') {
                     ctx.fillStyle = document.getElementById('bg-color').value; ctx.fillRect(0, 0, 2048, 2048);
@@ -607,22 +610,46 @@
                 });
             };
 
+            // 2. วาดชิ้นส่วนไม้คฑา
             await drawImg('fan'); await drawImg('hand'); await drawImg('base');
             await drawImg('wings'); await drawImg('main-head'); await drawImg('sub-head');
             await drawImg('c1-crystal'); await drawImg('c2-crystal');
             await drawImg('c-main-1'); await drawImg('c-main-3'); await drawImg('c-sub-2'); await drawImg('c-sub-4');
 
+            // 3. วาดข้อความโค้ง
             if (document.getElementById('chk-show-text').checked) {
                 ctx.drawImage(document.getElementById('text-canvas'), 0, 0);
             }
 
+            // 4. ลายน้ำห้ามลบ
             ctx.font = "italic 36px 'Mali', sans-serif"; ctx.fillStyle = "#5e1115"; ctx.textAlign = "right";
             ctx.lineWidth = 5; ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
             ctx.strokeText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
             ctx.fillText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
 
-            const link = document.createElement('a'); link.download = 'MyMagicWand.png'; link.href = canvas.toDataURL('image/png'); link.click();
-            btn.innerHTML = "SAVE";
+            // 5. แปลง Canvas เป็น Blob เพื่อหลีกเลี่ยงปัญหาไฟล์ใหญ่ใน Safari
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                
+                // เอารูปมาใส่ใน Popup ให้ผู้ใช้แตะค้างเพื่อบันทึกด้วย (ครอบคลุม 100% สำหรับ iOS)
+                document.getElementById('final-img-preview').src = url;
+                document.getElementById('save-modal').style.display = 'flex';
+                
+                // ลองสั่งดาวน์โหลดอัตโนมัติควบคู่ไปด้วย (แปะลิงก์ใน body เพื่อช่วย Safari)
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = url;
+                link.download = 'MyMagicWand.png';
+                document.body.appendChild(link);
+                link.click();
+                
+                // ล้างไฟล์ขยะและรีเซ็ตปุ่ม
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    btn.innerHTML = "SAVE";
+                }, 100);
+
+            }, 'image/png');
         }
 
     </script>
