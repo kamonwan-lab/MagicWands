@@ -21,7 +21,7 @@
         .app-container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; position: relative; overflow: hidden; }
 
         h1 {
-            font-family: 'Playfair Display', serif; color: #fff; text-align: center; font-size: 28px; margin-bottom: 30px;
+            font-family: 'Playfair Display', serif; color: #fff; text-align: center; font-size: 28px; margin-bottom: 20px;
             text-shadow: 2px 2px 0 #ff6b81, -1px -1px 0 #ff6b81, 1px -1px 0 #ff6b81, -1px 1px 0 #ff6b81, 3px 3px 5px rgba(0,0,0,0.2);
         }
 
@@ -34,18 +34,39 @@
         .control-group h3 { font-size: 16px; margin: 0 0 10px 0; display: flex; align-items: center; gap: 5px; }
         .control-group h3::before { content: "✦"; color: var(--text-maroon); font-size: 18px; }
 
-        .shape-selectors { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        /* --- รูปทรง (Shape Selectors) แบบมีวงกลมรองพื้น --- */
+        .shape-selectors { display: flex; justify-content: center; gap: 12px; margin-bottom: 10px; }
         .shape-radio { display: none; }
-        .shape-icon { font-size: 20px; cursor: pointer; transition: 0.2s; filter: grayscale(100%) opacity(0.5); }
-        .shape-radio:checked + .shape-icon { filter: grayscale(0%) opacity(1); transform: scale(1.2); }
-
-        select {
-            width: 100%; padding: 8px 15px; border: 2px solid var(--gold); border-radius: 25px;
-            background-color: #fff; color: var(--brown-accent); font-family: inherit; font-weight: bold;
-            font-size: 14px; appearance: none; cursor: pointer; text-align: center;
+        .shape-icon { 
+            display: inline-flex; justify-content: center; align-items: center;
+            width: 40px; height: 40px; border-radius: 50%; background-color: #fff; border: 2px solid #ddd;
+            font-size: 20px; cursor: pointer; transition: 0.2s; filter: grayscale(100%) opacity(0.6); 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .select-wrapper { position: relative; }
-        .select-wrapper::after { content: "▼"; position: absolute; right: 15px; top: 10px; color: var(--gold); pointer-events: none; font-size: 12px; }
+        .shape-radio:checked + .shape-icon { 
+            filter: grayscale(0%) opacity(1); transform: scale(1.15); 
+            border-color: var(--pink-accent); background-color: #fff0f5; box-shadow: 0 4px 8px rgba(255, 140, 163, 0.3);
+        }
+
+        /* --- วงกลมเลือกสี (Color Swatches) --- */
+        .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; }
+        .color-radio { display: none; }
+        .color-label {
+            display: inline-block; width: 25px; height: 25px; border-radius: 50%;
+            border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .color-radio:checked + .color-label { border-color: var(--pink-accent); transform: scale(1.3); }
+        
+        .color-label.white { background-color: #f8f9fa; }
+        .color-label.pink { background-color: rgb(250, 173, 255); } /* สีที่คุณบรีฟ */
+        .color-label.blue { background-color: rgb(122, 228, 255); }  /* สีที่คุณบรีฟ */
+        
+        .color-text { font-size: 14px; font-weight: bold; color: var(--brown-accent); margin-right: 5px; }
+
+        /* Slider Y-Offset สำหรับ Sub-head */
+        input[type=range] { -webkit-appearance: none; width: 90%; background: transparent; margin: 5px 0; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--pink-accent); cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #fff; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #ffe4e1; border-radius: 3px; border: 1px solid #ffb6c1; }
 
         /* Crystals Section */
         .crystal-section { grid-column: span 2; }
@@ -54,42 +75,32 @@
         .circle-label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
         .circle-indicator { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; display: inline-block; transition: 0.2s; position: relative; }
         .radio-circle:checked + .circle-indicator { background: var(--brown-accent); border-color: var(--brown-accent); }
-        
         .crystal-dropdown-trigger .circle-indicator { border-radius: 50%; }
         .crystal-dropdown-trigger { border: 1px solid var(--gold); padding: 5px 15px; border-radius: 20px; background: #fff; }
-        .sub-crystal-menu {
-            display: none; flex-direction: column; gap: 5px; margin-top: 10px; padding: 10px;
-            background: #fff9e6; border-radius: 10px; border: 1px dashed var(--gold); width: 100%;
-        }
+        .sub-crystal-menu { display: none; flex-direction: column; gap: 5px; margin-top: 10px; padding: 10px; background: #fff9e6; border-radius: 10px; border: 1px dashed var(--gold); width: 100%; font-size: 14px;}
+        .sub-crystal-menu label { cursor: pointer; }
 
         .submit-section { text-align: center; margin: 20px 0; font-weight: bold; font-size: 18px; }
-        .btn-yesss {
-            padding: 8px 35px; font-size: 18px; font-weight: bold; font-family: inherit; color: var(--text-maroon); background: #fff; border: 2px solid var(--gold);
-            border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); margin-left: 15px; transition: transform 0.2s;
-        }
+        .btn-yesss { padding: 8px 35px; font-size: 18px; font-weight: bold; font-family: inherit; color: var(--text-maroon); background: #fff; border: 2px solid var(--gold); border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); margin-left: 15px; transition: transform 0.2s; }
         .btn-yesss:hover { transform: scale(1.05); background: #fff9e6; }
 
         /* Canvas Preview Area */
-        .preview-box {
-            width: 100%; height: 400px; background: url('assets/5.png') center/cover; background-color: #fcfcfc; border: 2px solid #ffccd5; border-radius: 15px;
-            position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center;
-        }
+        .preview-box { width: 100%; height: 400px; background: url('assets/5.png') center/cover; background-color: #fcfcfc; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         #screen-result .preview-box { height: 500px; border-color: #ffb6c1; border-width: 3px; border-radius: 20px; }
+        .wand-scaler { width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
+        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; } /* ซ่อนไว้ก่อน */
 
-        .wand-scaler {
-            width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center;
-            display: flex; justify-content: center; align-items: center; transition: background 0.3s;
-        }
-
-        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; }
-
-        /* ปรับใบพัดให้สว่างขาวที่สุดด้วย Filter */
-        #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(120%) contrast(90%); }
-        #hand { z-index: 1; display: block; }
-        #base { z-index: 2; display: block; }
-        #wings { z-index: 3; display: block; }
-        #main-head { z-index: 4; display: block; }
-        #sub-head { z-index: 5; }
+        /* 
+           ปรับฟิลเตอร์ใบพัดที่นี่:
+           - brightness: ความสว่างรวม
+           - contrast: เพิ่มความคมชัด (ทำให้เส้นเทาเข้มขึ้น)
+        */
+        #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(110%) contrast(90%); }
+        #hand { z-index: 1; }
+        #base { z-index: 2; }
+        #wings { z-index: 3; }
+        #main-head { z-index: 4; }
+        #sub-head { z-index: 5; transition: top 0.1s; }
         .crystal-layer { z-index: 6; }
 
         .part-head { transition: transform 0.6s ease-in-out; }
@@ -127,30 +138,78 @@
             <h1>Make your own Magic Wand!</h1>
 
             <div class="controls-grid">
-                <div class="control-group"><h3>Handle ด้าม</h3><div class="select-wrapper"><select id="sel-handle" onchange="updateWand()"><option value="W1">colour (White)</option><option value="B1">colour (Blue)</option><option value="P1">colour (Pink)</option></select></div></div>
-                <div class="control-group"><h3>Base ฐานรองหัว</h3><div class="select-wrapper"><select id="sel-base" onchange="updateWand()"><option value="W2">colour (White)</option><option value="B2">colour (Blue)</option><option value="P2">colour (Pink)</option></select></div></div>
+                
+                <!-- ด้ามคฑา -->
+                <div class="control-group">
+                    <h3>Handle ด้าม</h3>
+                    <div class="color-group">
+                        <span class="color-text">colour</span>
+                        <label><input type="radio" name="h-color" value="W1" class="color-radio"><span class="color-label white"></span></label>
+                        <label><input type="radio" name="h-color" value="P1" class="color-radio"><span class="color-label pink"></span></label>
+                        <label><input type="radio" name="h-color" value="B1" class="color-radio"><span class="color-label blue"></span></label>
+                    </div>
+                </div>
 
+                <!-- ฐานรองหัว -->
+                <div class="control-group">
+                    <h3>Base ฐานรองหัว</h3>
+                    <div class="color-group">
+                        <span class="color-text">colour</span>
+                        <label><input type="radio" name="b-color" value="W2" class="color-radio"><span class="color-label white"></span></label>
+                        <label><input type="radio" name="b-color" value="P2" class="color-radio"><span class="color-label pink"></span></label>
+                        <label><input type="radio" name="b-color" value="B2" class="color-radio"><span class="color-label blue"></span></label>
+                    </div>
+                </div>
+
+                <!-- หัวคฑาหลัก -->
                 <div class="control-group">
                     <h3>Main head หัวคฑาหลัก</h3>
                     <div class="shape-selectors">
-                        <label><input type="radio" name="m-shape" value="3" class="shape-radio" checked onchange="updateUI()"> <span class="shape-icon">🤎</span></label>
-                        <label><input type="radio" name="m-shape" value="4" class="shape-radio" onchange="updateUI()"> <span class="shape-icon">⭐</span></label>
-                        <label><input type="radio" name="m-shape" value="5" class="shape-radio" onchange="updateUI()"> <span class="shape-icon">❄️</span></label>
+                        <label><input type="radio" name="m-shape" value="3" class="shape-radio"><span class="shape-icon">🤎</span></label>
+                        <label><input type="radio" name="m-shape" value="4" class="shape-radio"><span class="shape-icon">⭐</span></label>
+                        <label><input type="radio" name="m-shape" value="5" class="shape-radio"><span class="shape-icon">❄️</span></label>
                     </div>
-                    <div class="select-wrapper"><select id="sel-main-color" onchange="updateWand()"><option value="W">colour (White)</option><option value="B">colour (Blue)</option><option value="P">colour (Pink)</option></select></div>
+                    <div class="color-group">
+                        <span class="color-text">colour</span>
+                        <label><input type="radio" name="m-color" value="W" class="color-radio"><span class="color-label white"></span></label>
+                        <label><input type="radio" name="m-color" value="P" class="color-radio"><span class="color-label pink"></span></label>
+                        <label><input type="radio" name="m-color" value="B" class="color-radio"><span class="color-label blue"></span></label>
+                    </div>
                 </div>
+                
+                <!-- หัวคฑาเสริม -->
                 <div class="control-group">
                     <h3>Sub-head หัวคฑาเสริม</h3>
                     <div class="shape-selectors">
-                        <label><input type="radio" name="s-shape" value="none" class="shape-radio" checked onchange="updateUI()"> <span class="shape-icon">❌</span></label>
-                        <label><input type="radio" name="s-shape" value="6" class="shape-radio" onchange="updateUI()"> <span class="shape-icon">🤎</span></label>
-                        <label><input type="radio" name="s-shape" value="7" class="shape-radio" onchange="updateUI()"> <span class="shape-icon">⭐</span></label>
-                        <label><input type="radio" name="s-shape" value="8" class="shape-radio" onchange="updateUI()"> <span class="shape-icon">❄️</span></label>
+                        <label><input type="radio" name="s-shape" value="off" class="shape-radio"><span class="shape-icon" style="font-size: 14px;">❌</span></label>
+                        <label><input type="radio" name="s-shape" value="6" class="shape-radio"><span class="shape-icon">🤎</span></label>
+                        <label><input type="radio" name="s-shape" value="7" class="shape-radio"><span class="shape-icon">⭐</span></label>
+                        <label><input type="radio" name="s-shape" value="8" class="shape-radio"><span class="shape-icon">❄️</span></label>
                     </div>
-                    <div class="select-wrapper"><select id="sel-sub-color" onchange="updateWand()"><option value="W">colour (White)</option><option value="B">colour (Blue)</option><option value="P">colour (Pink)</option></select></div>
+                    <div class="color-group">
+                        <span class="color-text">colour</span>
+                        <label><input type="radio" name="s-color" value="W" class="color-radio"><span class="color-label white"></span></label>
+                        <label><input type="radio" name="s-color" value="P" class="color-radio"><span class="color-label pink"></span></label>
+                        <label><input type="radio" name="s-color" value="B" class="color-radio"><span class="color-label blue"></span></label>
+                    </div>
+                    <div id="sub-head-adjust" style="display:none; text-align: center; margin-top: 10px;">
+                        <span style="font-size: 12px; color: #ff8ca3;">↕ เลื่อนตำแหน่ง (Y-Offset)</span><br>
+                        <input type="range" id="sub-head-y" min="-120" max="120" value="0" oninput="updateSubHeadY()">
+                    </div>
                 </div>
 
-                <div class="control-group"><h3>Wings ปีก</h3><div class="select-wrapper"><select id="sel-wings" onchange="updateWand()"><option value="W9">choose (White Wings)</option><option value="B9">choose (Blue Wings)</option><option value="none">choose (None)</option></select></div></div>
+                <!-- ปีก -->
+                <div class="control-group">
+                    <h3>Wings ปีก</h3>
+                    <div class="color-group" style="flex-wrap: wrap;">
+                        <label><input type="radio" name="w-color" value="off" class="color-radio"><span class="shape-icon" style="width: 25px; height: 25px; font-size: 12px; border-radius: 5px;">❌</span></label>
+                        <span style="font-size: 14px; margin: 0 5px; color:#ccc;">or</span>
+                        <span class="color-text">colour</span>
+                        <label><input type="radio" name="w-color" value="W9" class="color-radio"><span class="color-label white"></span></label>
+                        <label><input type="radio" name="w-color" value="P9" class="color-radio"><span class="color-label pink"></span></label>
+                        <label><input type="radio" name="w-color" value="B9" class="color-radio"><span class="color-label blue"></span></label>
+                    </div>
+                </div>
 
                 <div class="control-group crystal-section">
                     <h3>Crystals คริสตัล</h3>
@@ -173,15 +232,16 @@
             <div class="submit-section">Satisfy? <button class="btn-yesss" onclick="triggerMagicEffect()">YESSS</button></div>
 
             <div class="preview-box">
-                <div style="position: absolute; top: 10px; left: 15px; font-size: 14px; font-style: italic; color: #ffb6c1; z-index: 10;">Here's your wand!</div>
+                <!-- เปลี่ยนข้อความตรงนี้ -->
+                <div style="position: absolute; top: 10px; left: 15px; font-size: 14px; font-style: italic; color: #ffb6c1; z-index: 10;">sneaky peaky</div>
                 <div class="wand-scaler" id="wand-dom">
                     <img id="fan" src="assets/F0.png" class="layer hidden-down">
-                    <img id="hand" src="assets/W1.png" class="layer">
+                    <img id="hand" src="" class="layer">
                     <img id="c1-crystal" src="assets/C1.png" class="layer crystal-layer">
                     
-                    <img id="base" src="assets/W2.png" class="layer part-head">
-                    <img id="wings" src="assets/W9.png" class="layer part-head">
-                    <img id="main-head" src="assets/W3.png" class="layer part-head">
+                    <img id="base" src="" class="layer part-head">
+                    <img id="wings" src="" class="layer part-head">
+                    <img id="main-head" src="" class="layer part-head">
                     <img id="sub-head" src="" class="layer part-head">
                     <img id="c2-crystal" src="assets/C2.png" class="layer crystal-layer part-head">
                     
@@ -230,43 +290,62 @@
 
     <script>
         const PATH = 'assets/';
-        const getRadio = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
+        
+        // Helper ดึงค่าที่โดนเลือก ถ้าไม่มีให้ส่งค่า 'none' กลับไป
+        const getRadio = (name) => {
+            const el = document.querySelector(`input[name="${name}"]:checked`);
+            return el ? el.value : 'none';
+        };
+
+        // --- ระบบคลิกซ้ำเพื่อยกเลิกเลือก (Toggle Radio) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                // ใช้ mousedown เพื่อเก็บค่าก่อนหน้าที่เบราว์เซอร์จะเปลี่ยนสถานะ
+                radio.addEventListener('mousedown', function() {
+                    this.dataset.isChecked = this.checked;
+                });
+                radio.addEventListener('click', function() {
+                    if (this.dataset.isChecked === 'true') {
+                        this.checked = false;
+                        this.dataset.isChecked = 'false';
+                    } else {
+                        this.dataset.isChecked = 'true';
+                    }
+                    updateUI();
+                    updateWand();
+                });
+            });
+            updateUI(); // โหลดครั้งแรกให้เป็นหน้าว่างๆ
+        });
 
         function updateUI() {
             const mShape = getRadio('m-shape');
             const sShape = getRadio('s-shape');
 
+            // เปลี่ยนจาก C เป็น Type
             const mainMenu = document.getElementById('main-crystal-menu');
             let mHtml = '';
-            if (mShape === '3') {
-                mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> C3_1 (Heart Main)</label>`;
-            } else if (mShape === '4') {
-                mHtml = `<label><input type="checkbox" id="cm_1" onchange="handleStarCrystals('cm_1')"> C4_1 (Star Main)</label>
-                         <label><input type="checkbox" id="cm_3" onchange="handleStarCrystals('cm_3')"> C4_3 (Star Main)</label>`;
-            } else if (mShape === '5') {
-                mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> C5_1 (Snow Main)</label>`;
-            }
+            if (mShape === '3') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> Type 1</label>`; } 
+            else if (mShape === '4') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="handleStarCrystals('cm_1')"> Type 1</label><br><label><input type="checkbox" id="cm_3" onchange="handleStarCrystals('cm_3')"> Type 2</label>`; } 
+            else if (mShape === '5') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> Type 1</label>`; }
             mainMenu.innerHTML = mHtml;
 
             const subMenu = document.getElementById('sub-crystal-menu');
             let sHtml = '';
-            if (sShape === 'none') {
-                sHtml = '<small style="color:#999;">No sub-head selected</small>';
-                document.getElementById('chk-sub-crystal').checked = false;
-            } else if (sShape === '6') { 
-                sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> C3_2 (Heart Sub)</label>`;
-            } else if (sShape === '7') {
-                sHtml = `<label><input type="checkbox" id="cs_2" onchange="handleStarCrystals('cs_2')"> C4_2 (Star Sub)</label>
-                         <label><input type="checkbox" id="cs_4" onchange="handleStarCrystals('cs_4')"> C4_4 (Star Sub)</label>`;
-            } else if (sShape === '8') {
-                sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> C5_2 (Snow Sub)</label>`;
-            }
+            if (sShape === 'none' || sShape === 'off') { 
+                sHtml = '<small style="color:#999;">No sub-head selected</small>'; 
+                document.getElementById('chk-sub-crystal').checked = false; 
+            } 
+            else if (sShape === '6') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> Type 1</label>`; } 
+            else if (sShape === '7') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="handleStarCrystals('cs_2')"> Type 1</label><br><label><input type="checkbox" id="cs_4" onchange="handleStarCrystals('cs_4')"> Type 2</label>`; } 
+            else if (sShape === '8') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> Type 1</label>`; }
             subMenu.innerHTML = sHtml;
 
-            document.getElementById('chk-main-crystal').checked = false; 
-            document.getElementById('chk-sub-crystal').checked = false;
-            mainMenu.style.display = 'none'; 
-            subMenu.style.display = 'none';
+            if (mShape === 'none') { document.getElementById('chk-main-crystal').checked = false; mainMenu.style.display = 'none'; }
+            if (sShape === 'none' || sShape === 'off') { document.getElementById('chk-sub-crystal').checked = false; subMenu.style.display = 'none'; }
+            
+            document.getElementById('sub-head-y').value = 0;
+            updateSubHeadY();
             updateWand();
         }
 
@@ -283,26 +362,45 @@
             document.getElementById(`${type}-crystal-menu`).style.display = isChecked ? 'flex' : 'none'; updateWand();
         }
 
+        function updateSubHeadY() {
+            const yOffset = document.getElementById('sub-head-y').value + 'px';
+            document.getElementById('sub-head').style.top = yOffset;
+            document.getElementById('c-sub-2').style.top = yOffset;
+            document.getElementById('c-sub-4').style.top = yOffset;
+        }
+
         function updateWand() {
-            document.getElementById('hand').src = PATH + document.getElementById('sel-handle').value + '.png';
-            document.getElementById('base').src = PATH + document.getElementById('sel-base').value + '.png';
+            // เช็คว่ามีค่าส่งมาไหม ถ้ามีค่อยแสดงภาพ ถ้าไม่มีให้ซ่อน
+            const hVal = getRadio('h-color');
+            if (hVal !== 'none') { document.getElementById('hand').src = PATH + hVal + '.png'; document.getElementById('hand').style.display = 'block'; } else { document.getElementById('hand').style.display = 'none'; }
+
+            const bVal = getRadio('b-color');
+            if (bVal !== 'none') { document.getElementById('base').src = PATH + bVal + '.png'; document.getElementById('base').style.display = 'block'; } else { document.getElementById('base').style.display = 'none'; }
             
             const mShape = getRadio('m-shape'); 
-            const mColor = document.getElementById('sel-main-color').value;
-            document.getElementById('main-head').src = PATH + mColor + mShape + '.png';
-
-            const sShape = getRadio('s-shape'); 
-            const subHead = document.getElementById('sub-head');
-            if (sShape === 'none') { 
-                subHead.style.display = 'none'; 
-            } else { 
-                subHead.src = PATH + document.getElementById('sel-sub-color').value + sShape + '.png'; 
-                subHead.style.display = 'block'; 
+            const mColor = getRadio('m-color');
+            if (mShape !== 'none' && mColor !== 'none') {
+                document.getElementById('main-head').src = PATH + mColor + mShape + '.png';
+                document.getElementById('main-head').style.display = 'block';
+            } else {
+                document.getElementById('main-head').style.display = 'none';
             }
 
-            const wing = document.getElementById('sel-wings').value; 
+            const sShape = getRadio('s-shape'); 
+            const sColor = getRadio('s-color');
+            const subHead = document.getElementById('sub-head');
+            if (sShape === 'none' || sShape === 'off' || sColor === 'none') { 
+                subHead.style.display = 'none'; 
+                document.getElementById('sub-head-adjust').style.display = 'none';
+            } else { 
+                subHead.src = PATH + sColor + sShape + '.png'; 
+                subHead.style.display = 'block'; 
+                document.getElementById('sub-head-adjust').style.display = 'block';
+            }
+
+            const wing = getRadio('w-color'); 
             const wingsImg = document.getElementById('wings');
-            if (wing === 'none') { wingsImg.style.display = 'none'; } else { wingsImg.src = PATH + wing + '.png'; wingsImg.style.display = 'block'; }
+            if (wing === 'none' || wing === 'off') { wingsImg.style.display = 'none'; } else { wingsImg.src = PATH + wing + '.png'; wingsImg.style.display = 'block'; }
 
             document.getElementById('c1-crystal').style.display = document.getElementById('chk-c1').checked ? 'block' : 'none';
             document.getElementById('c2-crystal').style.display = document.getElementById('chk-c2').checked ? 'block' : 'none';
@@ -312,28 +410,16 @@
             document.getElementById('c-sub-2').style.display = 'none';
             document.getElementById('c-sub-4').style.display = 'none';
 
-            if (document.getElementById('chk-main-crystal').checked) {
+            if (document.getElementById('chk-main-crystal').checked && mShape !== 'none') {
                 const mPrefix = mShape === '3' ? 'C3' : (mShape === '4' ? 'C4' : 'C5');
-                if (document.getElementById('cm_1') && document.getElementById('cm_1').checked) { 
-                    document.getElementById('c-main-1').src = PATH + mPrefix + '_1.png'; 
-                    document.getElementById('c-main-1').style.display = 'block'; 
-                }
-                if (document.getElementById('cm_3') && document.getElementById('cm_3').checked) { 
-                    document.getElementById('c-main-3').src = PATH + mPrefix + '_3.png'; 
-                    document.getElementById('c-main-3').style.display = 'block'; 
-                }
+                if (document.getElementById('cm_1') && document.getElementById('cm_1').checked) { document.getElementById('c-main-1').src = PATH + mPrefix + '_1.png'; document.getElementById('c-main-1').style.display = 'block'; }
+                if (document.getElementById('cm_3') && document.getElementById('cm_3').checked) { document.getElementById('c-main-3').src = PATH + mPrefix + '_3.png'; document.getElementById('c-main-3').style.display = 'block'; }
             }
 
-            if (document.getElementById('chk-sub-crystal').checked && sShape !== 'none') {
+            if (document.getElementById('chk-sub-crystal').checked && sShape !== 'none' && sShape !== 'off') {
                 const sPrefix = sShape === '6' ? 'C3' : (sShape === '7' ? 'C4' : 'C5');
-                if (document.getElementById('cs_2') && document.getElementById('cs_2').checked) { 
-                    document.getElementById('c-sub-2').src = PATH + sPrefix + '_2.png'; 
-                    document.getElementById('c-sub-2').style.display = 'block'; 
-                }
-                if (document.getElementById('cs_4') && document.getElementById('cs_4').checked) { 
-                    document.getElementById('c-sub-4').src = PATH + sPrefix + '_4.png'; 
-                    document.getElementById('c-sub-4').style.display = 'block'; 
-                }
+                if (document.getElementById('cs_2') && document.getElementById('cs_2').checked) { document.getElementById('c-sub-2').src = PATH + sPrefix + '_2.png'; document.getElementById('c-sub-2').style.display = 'block'; }
+                if (document.getElementById('cs_4') && document.getElementById('cs_4').checked) { document.getElementById('c-sub-4').src = PATH + sPrefix + '_4.png'; document.getElementById('c-sub-4').style.display = 'block'; }
             }
         }
 
@@ -453,17 +539,22 @@
                     if (!imgEl || imgEl.style.display === 'none' || !imgEl.src || imgEl.src.endsWith('none.png') || imgEl.classList.contains('hidden-down')) { resolve(); return; }
                     const img = new Image(); img.crossOrigin = "anonymous";
                     img.onload = () => { 
-                        const offsetY = imgEl.classList.contains('move-down') ? 500 : 0; 
+                        let offsetY = imgEl.classList.contains('move-down') ? 500 : 0; 
                         
-                        // ฟิลเตอร์ฟอกขาวสำหรับพัดตอนเซฟรูป
+                        if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') {
+                            const extraY = parseInt(document.getElementById('sub-head-y').value) || 0;
+                            offsetY += extraY;
+                        }
+
+                        // ใส่ค่า filter ตรงนี้ด้วยให้ตรงกับที่โชว์บนหน้าเว็บ
                         if (id === 'fan') {
-                            ctx.filter = 'brightness(250%) grayscale(100%) contrast(120%)';
+                            ctx.filter = 'brightness(140%) grayscale(100%) contrast(250%)';
                         } else {
                             ctx.filter = 'none';
                         }
                         
                         ctx.drawImage(img, 0, offsetY, 2048, 2048); 
-                        ctx.filter = 'none'; // คืนค่าเป็น none หลังวาดเสร็จ
+                        ctx.filter = 'none'; 
                         resolve(); 
                     };
                     img.onerror = resolve; img.src = imgEl.src;
@@ -491,7 +582,6 @@
             btn.innerHTML = "SAVE";
         }
 
-        updateUI();
     </script>
 </body>
 </html>
