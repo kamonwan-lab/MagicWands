@@ -35,7 +35,8 @@
         .control-group h3 { font-size: 16px; margin: 0 0 10px 0; display: flex; align-items: center; gap: 5px; }
         .control-group h3::before { content: "✦"; color: var(--text-maroon); font-size: 18px; }
 
-        .shape-selectors { display: flex; justify-content: center; gap: 12px; margin-bottom: 10px; }
+        /* การจัดกลุ่มให้ขึ้นบรรทัดใหม่เมื่อจอมือถือเล็กป้องกันปุ่มซ้อนทับกัน */
+        .shape-selectors { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; position: relative; z-index: 10; }
         .shape-radio { display: none; }
         .shape-icon { 
             display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background-color: #fff; border: 2px solid #ddd;
@@ -43,7 +44,7 @@
         }
         .shape-radio:checked + .shape-icon { filter: grayscale(0%) opacity(1); transform: scale(1.15); border-color: var(--pink-accent); background-color: #fff0f5; box-shadow: 0 4px 8px rgba(255, 140, 163, 0.3); }
 
-        .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; }
+        .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 10; }
         .color-radio { display: none; }
         .color-label { display: inline-block; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .color-radio:checked + .color-label { border-color: var(--pink-accent); transform: scale(1.3); }
@@ -72,11 +73,14 @@
         .btn-yesss { padding: 8px 35px; font-size: 18px; font-weight: bold; font-family: inherit; color: var(--text-maroon); background: #fff; border: 2px solid var(--gold); border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); margin-left: 15px; transition: transform 0.2s; }
         .btn-yesss:hover { transform: scale(1.05); background: #fff9e6; }
 
-        /* พรีวิวเป็นสีขาวบริสุทธิ์และใช้ bgsave_2 เป็นค่าเริ่มต้น */
         .preview-box { width: 100%; height: 400px; background: #ffffff; border: 2px solid #ffccd5; border-radius: 15px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         #screen-result .preview-box { height: 500px; border-color: #ffb6c1; border-width: 3px; border-radius: 20px; }
         .wand-scaler { width: 2048px; height: 2048px; position: absolute; transform: scale(0.18); transform-origin: center center; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
         .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: none; }
+
+        /* บังคับซ่อนข้อความอวยพรในหน้าออกแบบ */
+        #screen-builder #text-canvas { display: none !important; }
+        #text-canvas { z-index: 20; display: block; } 
 
         /* ฟิลเตอร์ของ Fan */
         #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(115%) contrast(90%); }
@@ -86,7 +90,6 @@
         #main-head { z-index: 4; }
         #sub-head, #c-sub-2, #c-sub-4 { z-index: 5; transition: top 0.1s ease-out, transform 0.6s ease-in-out; }
         .crystal-layer { z-index: 6; }
-        #text-canvas { z-index: 20; display: block; } 
 
         .part-head { transition: transform 0.6s ease-in-out; }
         .part-head.move-down { transform: translateY(500px); }
@@ -115,7 +118,12 @@
 
         @media (max-width: 768px) {
             body { background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed; }
-            .controls-grid { grid-template-columns: 1fr; gap: 15px; }
+            /* ปรับให้แต่ละกรุ๊ปเรียงลงมาเป็นบรรทัดเต็มๆ (1 คอลัมน์) ตามรีเควส */
+            .controls-grid { grid-template-columns: 1fr; gap: 20px; }
+            .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
+            .control-group:last-child { border-bottom: none; }
+            .crystal-section { grid-column: span 1; }
+            
             .preview-box { height: 320px; } #screen-result .preview-box { height: 400px; }
             h1 { font-size: 22px; margin-bottom: 15px; }
             .action-bar { flex-direction: column; gap: 15px; }
@@ -183,7 +191,7 @@
                         <label><input type="radio" name="s-color" value="P" class="color-radio"><span class="color-label pink"></span></label>
                         <label><input type="radio" name="s-color" value="B" class="color-radio"><span class="color-label blue"></span></label>
                     </div>
-                    <div id="sub-head-adjust" style="display:none; text-align: center; margin-top: 10px;">
+                    <div id="sub-head-adjust" style="display:none; text-align: center; margin-top: 10px; position: relative; z-index: 5;">
                         <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 5px;">
                             <span style="font-size: 12px; color: #ff8ca3;">↕ Y-Offset</span>
                             <label class="fixed-toggle"><input type="checkbox" id="chk-fix-y"> Fixed</label>
@@ -222,18 +230,6 @@
                 </div>
             </div>
 
-            <!-- เมนูจัดการข้อความ & สุ่มคำอวยพร -->
-            <div style="display: flex; flex-direction: column; align-items: center; margin-top: 5px; font-size: 14px; color: var(--text-maroon); font-weight: bold; gap: 8px;">
-                <div>
-                    <label style="cursor: pointer;"><input type="checkbox" id="chk-show-text-1" checked onchange="syncTextConfig('1')"> ✨ ใส่ข้อความอวยพร</label>
-                    <input type="color" id="text-color-1" value="#ff6b81" class="bg-picker" style="width:20px; height:20px; vertical-align: middle; margin-left: 5px;" onchange="syncTextConfig('1')">
-                </div>
-                <div style="display: flex; gap: 5px; align-items: center; width: 100%; justify-content: center;">
-                    <input type="text" id="greeting-text-1" value="✨May your life be magical!✨" style="padding: 6px 12px; border-radius: 15px; border: 1px solid var(--gold); text-align: center; font-family: inherit; width: 70%; font-size: 12px;" oninput="syncTextConfig('1')">
-                    <button type="button" onclick="randomGreeting('1')" title="สุ่มข้อความ" style="background: #fff0f5; border: 1px solid #ffb6c1; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px;">🎲</button>
-                </div>
-            </div>
-
             <div class="submit-section">Satisfy? <button class="btn-yesss" onclick="triggerMagicEffect()">YESSS</button></div>
 
             <div class="preview-box">
@@ -255,6 +251,7 @@
                     <img id="c-sub-2" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-4" src="" class="layer crystal-layer part-head">
 
+                    <!-- Canvas ข้อความถูกซ่อนในหน้านี้ด้วย CSS -->
                     <canvas id="text-canvas" width="2048" height="2048" class="layer"></canvas>
                 </div>
             </div>
@@ -271,13 +268,18 @@
                 <div class="bg-controls">
                     <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Settings</div>
                     
+                    <!-- เครื่องมือตั้งค่าข้อความอวยพร ย้ายมาอยู่แค่หน้า 2 เท่านั้น -->
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 5px;">
-                        <label class="transparent-label"><input type="checkbox" id="chk-show-text-2" checked onchange="syncTextConfig('2')"> ✨ ข้อความอวยพร</label>
-                        <input type="color" id="text-color-2" class="bg-picker" value="#ff6b81" style="width:20px; height:20px;" onchange="syncTextConfig('2')" title="สีข้อความอวยพร">
+                        <label class="transparent-label"><input type="checkbox" id="chk-show-text" checked onchange="updateTextPreview()"> ✨ ข้อความอวยพร</label>
+                        <input type="color" id="text-color" class="bg-picker" value="#ff6b81" style="width:20px; height:20px;" onchange="updateTextPreview()" title="สีข้อความอวยพร">
                     </div>
-                    <div style="display: flex; gap: 5px; align-items: center; width: 100%; justify-content: center;">
-                        <input type="text" id="greeting-text-2" value="✨May your life be magical!✨" style="padding: 6px; border-radius: 10px; border: 1px solid var(--gold); text-align: center; font-family: inherit; width: 70%; font-size: 12px;" oninput="syncTextConfig('2')">
-                        <button type="button" onclick="randomGreeting('2')" class="btn-small" style="padding: 5px 8px;">🎲 สุ่ม</button>
+                    <div style="display: flex; gap: 5px; align-items: center; width: 100%; justify-content: center; flex-wrap: wrap;">
+                        <input type="text" id="greeting-text" value="✨May your life be magical!✨" style="padding: 6px; border-radius: 10px; border: 1px solid var(--gold); text-align: center; font-family: inherit; width: 65%; font-size: 12px;" oninput="updateTextPreview()">
+                        <button type="button" onclick="randomGreeting()" class="btn-small" style="padding: 5px 8px;">🎲 สุ่ม</button>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 5px; gap: 10px;">
+                        <span style="font-size: 12px; color: var(--pink-accent);">↕ เลื่อนข้อความ</span>
+                        <input type="range" id="text-y-offset" min="-600" max="600" value="0" style="width: 50%;" oninput="updateTextPreview()">
                     </div>
                     
                     <div style="width: 100%; height: 1px; background: #ffe4e1; margin: 8px 0;"></div>
@@ -336,54 +338,36 @@
         });
 
         // --- ระบบสุ่มข้อความอวยพร ---
-        function randomGreeting(source) {
+        function randomGreeting() {
             const randomText = greetingsList[Math.floor(Math.random() * greetingsList.length)];
-            document.getElementById('greeting-text-' + source).value = randomText;
-            syncTextConfig(source);
-        }
-
-        // --- ระบบวาดข้อความโค้งบน Canvas ---
-        function syncTextConfig(source) {
-            let isChecked, color, text;
-            if (source === '1') {
-                isChecked = document.getElementById('chk-show-text-1').checked; 
-                color = document.getElementById('text-color-1').value;
-                text = document.getElementById('greeting-text-1').value;
-                
-                document.getElementById('chk-show-text-2').checked = isChecked; 
-                document.getElementById('text-color-2').value = color;
-                document.getElementById('greeting-text-2').value = text;
-            } else {
-                isChecked = document.getElementById('chk-show-text-2').checked; 
-                color = document.getElementById('text-color-2').value;
-                text = document.getElementById('greeting-text-2').value;
-                
-                document.getElementById('chk-show-text-1').checked = isChecked; 
-                document.getElementById('text-color-1').value = color;
-                document.getElementById('greeting-text-1').value = text;
-            }
+            document.getElementById('greeting-text').value = randomText;
             updateTextPreview();
         }
 
+        // --- ระบบวาดข้อความโค้งบน Canvas ---
         function updateTextPreview() {
             const tCanvas = document.getElementById('text-canvas');
             const ctx = tCanvas.getContext('2d');
             ctx.clearRect(0, 0, 2048, 2048);
 
-            if (!document.getElementById('chk-show-text-1').checked) {
+            if (!document.getElementById('chk-show-text').checked) {
                 tCanvas.style.display = 'none'; return;
             }
             tCanvas.style.display = 'block';
 
-            const text = document.getElementById('greeting-text-1').value || " ";
-            const color = document.getElementById('text-color-1').value;
+            const text = document.getElementById('greeting-text').value || " ";
+            const color = document.getElementById('text-color').value;
+            const yOffset = parseInt(document.getElementById('text-y-offset').value) || 0;
 
             ctx.save();
             ctx.font = "bold 95px 'Playfair Display', serif"; 
             ctx.textAlign = "center"; ctx.textBaseline = "middle";
             ctx.lineWidth = 15; ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; ctx.lineJoin = "round";
 
-            const centerX = 1024; const centerY = 1350; const radius = 1150; 
+            // ปรับแกน Y ข้อความตาม Slider
+            const centerX = 1024; 
+            const centerY = 1350 + yOffset; 
+            const radius = 1150; 
             ctx.translate(centerX, centerY);
 
             const totalWidth = ctx.measureText(text).width;
@@ -628,7 +612,7 @@
             await drawImg('c1-crystal'); await drawImg('c2-crystal');
             await drawImg('c-main-1'); await drawImg('c-main-3'); await drawImg('c-sub-2'); await drawImg('c-sub-4');
 
-            if (document.getElementById('chk-show-text-1').checked) {
+            if (document.getElementById('chk-show-text').checked) {
                 ctx.drawImage(document.getElementById('text-canvas'), 0, 0);
             }
 
