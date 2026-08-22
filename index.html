@@ -2,7 +2,8 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ล็อค Viewport เพื่อแก้ปัญหา Resolution บนมือถือและไอแพดให้พอดีเป๊ะ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Make your own Magic Wand!</title>
     
     <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
@@ -23,6 +24,17 @@
         }
 
         .app-container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; position: relative; overflow: hidden; background: transparent; }
+
+        /* แผ่นหลังโปร่งแสงสำหรับ Desktop ให้อ่านง่ายขึ้น */
+        @media (min-width: 769px) {
+            .app-container {
+                background: rgba(255, 255, 255, 0.45);
+                backdrop-filter: blur(8px);
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                margin: 20px 0;
+            }
+        }
 
         h1 {
             font-family: 'Playfair Display', serif; color: #fff; text-align: center; font-size: 28px; margin-bottom: 20px;
@@ -50,10 +62,15 @@
         .color-radio { display: none; }
         .color-label { display: inline-block; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .color-radio:checked + .color-label, .color-radio:checked + .shape-icon { border-color: var(--pink-accent); transform: scale(1.3); background-color: #fff0f5; }
+        
         .color-label.white { background-color: #f8f9fa; }
         .color-label.pink { background-color: rgb(250, 173, 255); }
         .color-label.blue { background-color: rgb(122, 228, 255); } 
         .color-text { font-size: 14px; font-weight: bold; color: var(--brown-accent); margin-right: 5px; }
+
+        /* กล่องสุ่มสี (Custom Color Hue) */
+        .custom-wrapper { position: relative; overflow: hidden; padding: 0; margin: 0; display: inline-block; vertical-align: top; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); }
+        .custom-wrapper input[type=color] { position: absolute; top: -10px; left: -10px; width: 50px; height: 50px; cursor: pointer; border: none; padding: 0; outline: none; opacity: 0;}
 
         input[type=range] { -webkit-appearance: none; width: 90%; background: transparent; margin: 5px 0; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--pink-accent); cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #fff; }
@@ -83,6 +100,7 @@
         #screen-builder #text-canvas { display: none !important; }
         #text-canvas { z-index: 20; display: block; } 
 
+        /* Filter ใบพัด ตามที่คุณระบุเป๊ะ */
         #fan { z-index: 0; display: block; transition: transform 0.6s ease-in-out, opacity 0.3s; filter: brightness(155%) grayscale(115%) contrast(90%); }
         #hand { z-index: 1; }
         #base { z-index: 2; }
@@ -99,7 +117,6 @@
         .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; align-items: center; }
         .fan-section { background: rgba(255,255,255,0.85); padding: 15px 25px; border-radius: 20px; text-align: center; border: 2px dashed #ffb6c1; backdrop-filter: blur(5px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); margin-bottom: 5px; width: 95%; box-sizing: border-box;}
         
-        /* สไตล์สำหรับข้อความเชิญชวน เพื่อให้ปรับแก้ในมือถือได้ง่าย */
         .fun-text { font-size: 16px; font-weight: bold; color: var(--pink-accent); margin: 0 0 10px 0; line-height: 1.6; }
         .fun-subtext { font-size: 14px; color: var(--brown-accent); }
 
@@ -127,6 +144,7 @@
 
         @media (max-width: 768px) {
             body { background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed; }
+            .app-container { padding: 15px; }
             .controls-grid { grid-template-columns: 1fr; gap: 20px; }
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
             .control-group:last-child { border-bottom: none; }
@@ -137,9 +155,9 @@
             .action-bar { flex-direction: column; gap: 15px; }
             .bg-controls { width: 100%; padding: 10px; }
             
-            /* ลดขนาดฟอนต์บนมือถือเพื่อไม่ให้วรรณยุกต์ซ้อนทับกัน */
             .fun-text { font-size: 14px; line-height: 1.8; }
             .fun-subtext { font-size: 12px; }
+            .btn-save { padding: 10px 15px; font-size: 16px; }
         }
     </style>
 </head>
@@ -160,6 +178,12 @@
                         <label><input type="radio" name="h-color" value="W1" class="color-radio"><span class="color-label white"></span></label>
                         <label><input type="radio" name="h-color" value="P1" class="color-radio"><span class="color-label pink"></span></label>
                         <label><input type="radio" name="h-color" value="B1" class="color-radio"><span class="color-label blue"></span></label>
+                        <label title="เลือกสีอื่นๆ">
+                            <input type="radio" name="h-color" value="custom" class="color-radio">
+                            <div class="color-label custom-wrapper">
+                                <input type="color" id="h-color-custom" value="#a255ff" onchange="playSound('click'); document.querySelector('input[name=h-color][value=custom]').checked=true; updateWand();" onclick="document.querySelector('input[name=h-color][value=custom]').checked=true; updateWand();">
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -170,6 +194,12 @@
                         <label><input type="radio" name="b-color" value="W2" class="color-radio"><span class="color-label white"></span></label>
                         <label><input type="radio" name="b-color" value="P2" class="color-radio"><span class="color-label pink"></span></label>
                         <label><input type="radio" name="b-color" value="B2" class="color-radio"><span class="color-label blue"></span></label>
+                        <label title="เลือกสีอื่นๆ">
+                            <input type="radio" name="b-color" value="custom" class="color-radio">
+                            <div class="color-label custom-wrapper">
+                                <input type="color" id="b-color-custom" value="#ffb84d" onchange="playSound('click'); document.querySelector('input[name=b-color][value=custom]').checked=true; updateWand();" onclick="document.querySelector('input[name=b-color][value=custom]').checked=true; updateWand();">
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -185,6 +215,12 @@
                         <label><input type="radio" name="m-color" value="W" class="color-radio"><span class="color-label white"></span></label>
                         <label><input type="radio" name="m-color" value="P" class="color-radio"><span class="color-label pink"></span></label>
                         <label><input type="radio" name="m-color" value="B" class="color-radio"><span class="color-label blue"></span></label>
+                        <label title="เลือกสีอื่นๆ">
+                            <input type="radio" name="m-color" value="custom" class="color-radio">
+                            <div class="color-label custom-wrapper">
+                                <input type="color" id="m-color-custom" value="#ff5e7e" onchange="playSound('click'); document.querySelector('input[name=m-color][value=custom]').checked=true; updateWand();" onclick="document.querySelector('input[name=m-color][value=custom]').checked=true; updateWand();">
+                            </div>
+                        </label>
                     </div>
                 </div>
                 
@@ -201,6 +237,12 @@
                         <label><input type="radio" name="s-color" value="W" class="color-radio"><span class="color-label white"></span></label>
                         <label><input type="radio" name="s-color" value="P" class="color-radio"><span class="color-label pink"></span></label>
                         <label><input type="radio" name="s-color" value="B" class="color-radio"><span class="color-label blue"></span></label>
+                        <label title="เลือกสีอื่นๆ">
+                            <input type="radio" name="s-color" value="custom" class="color-radio">
+                            <div class="color-label custom-wrapper">
+                                <input type="color" id="s-color-custom" value="#4dffb8" onchange="playSound('click'); document.querySelector('input[name=s-color][value=custom]').checked=true; updateWand();" onclick="document.querySelector('input[name=s-color][value=custom]').checked=true; updateWand();">
+                            </div>
+                        </label>
                     </div>
                     <div id="sub-head-adjust" style="display:none; text-align: center; margin-top: 10px; position: relative; z-index: 5;">
                         <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 5px;">
@@ -220,6 +262,12 @@
                         <label><input type="radio" name="w-color" value="W9" class="color-radio"><span class="color-label white"></span></label>
                         <label><input type="radio" name="w-color" value="P9" class="color-radio"><span class="color-label pink"></span></label>
                         <label><input type="radio" name="w-color" value="B9" class="color-radio"><span class="color-label blue"></span></label>
+                        <label title="เลือกสีอื่นๆ">
+                            <input type="radio" name="w-color" value="custom" class="color-radio">
+                            <div class="color-label custom-wrapper">
+                                <input type="color" id="w-color-custom" value="#ffe600" onchange="playSound('click'); document.querySelector('input[name=w-color][value=custom]').checked=true; updateWand();" onclick="document.querySelector('input[name=w-color][value=custom]').checked=true; updateWand();">
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -298,12 +346,11 @@
                     
                     <div style="width: 100%; height: 1px; background: #ffe4e1; margin: 8px 0;"></div>
 
-                    <!-- ตามบรีฟล่าสุด -->
                     <input type="color" id="bg-color" class="bg-picker" value="#ffffff" onchange="setBgMode('color')" title="เลือกสีพื้นหลัง">
                     <select id="sel-preset-bg" class="btn-small" style="appearance: auto;" onchange="setBgMode('preset')">
                         <option value="assets/bgsave_2.jpg">✨ ลายกระดาษ (Default)</option>
-                        <option value="assets/bgsave1.jpg">ฉากที่ 1</option>
-                        <option value="assets/bgsave2.jpg">ฉากที่ 2</option>
+                        <option value="assets/bgsave1.jpg">ฉากที่ 1 </option>
+                        <option value="assets/bgsave2.jpg">ฉากที่ 2 </option>
                     </select>
                     <button class="btn-small" onclick="document.getElementById('bg-upload').click()">🖼️ อัปโหลด</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
@@ -320,7 +367,6 @@
                         <button class="btn-save" id="btn-save" onclick="exportToImage()">SAVE PNG</button>
                         <button class="btn-save" id="btn-save-gif" onclick="exportToGIF()" style="background: var(--pink-accent); color: white; border-color: var(--pink-accent);">SAVE GIF</button>
                     </div>
-                    <!-- ข้อความเตือนตอนเซฟ GIF (จะโชว์ก็ต่อเมื่อกดปุ่ม) -->
                     <div id="encoding-warning" style="display: none; color: #ff6b81; font-size: 13px; font-weight: bold; text-align: center; margin-top: 5px; line-height: 1.4;">
                         ⏳ ขณะทำการบันทึก GIF<br>อย่าพึ่งปรับพื้นหลังและตัวหนังสือน้า กรุณารอสักครู่...
                     </div>
@@ -363,7 +409,7 @@
             return el ? el.value : 'none';
         };
 
-        // --- ระบบเสียง (Sound System) ---
+        // --- ระบบเสียง ---
         function playSound(type) {
             const audio = new Audio(`assets/${type}.mp3`);
             audio.play().catch(e => { console.log("Sound autoplay prevented."); });
@@ -372,8 +418,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(radio => {
                 radio.addEventListener('mousedown', function() { this.dataset.isChecked = this.checked; });
-                radio.addEventListener('click', function() {
-                    playSound('click'); 
+                radio.addEventListener('click', function(e) {
+                    if (e.target.type !== 'color') playSound('click'); 
                     if (this.dataset.isChecked === 'true') { this.checked = false; this.dataset.isChecked = 'false'; } 
                     else { this.dataset.isChecked = 'true'; }
                     updateUI(); updateWand();
@@ -383,6 +429,39 @@
             document.getElementById('sel-preset-bg').value = 'assets/bgsave_2.jpg';
             document.fonts.ready.then(() => { updateTextPreview(); });
         });
+
+        // --- ระบบย้อมสีภาพ (Hue Adjustment) ---
+        const tintedCache = {};
+        async function getTintedImage(baseSrc, color) {
+            const key = baseSrc + '_' + color;
+            if (tintedCache[key]) return tintedCache[key];
+
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 2048; canvas.height = 2048;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 1. วาดรูปขาวลงไปก่อน
+                    ctx.drawImage(img, 0, 0, 2048, 2048);
+                    // 2. ใช้โหมด Multiply ย้อมสีเฉพาะส่วนที่ไม่โปร่งใส แสงและเงาจะยังอยู่ครบ
+                    ctx.globalCompositeOperation = 'multiply';
+                    ctx.fillStyle = color;
+                    ctx.fillRect(0, 0, 2048, 2048);
+                    // 3. ใช้ Destination-in เพื่อลบส่วนที่เกินออกไปให้โปร่งใสเหมือนต้นฉบับ
+                    ctx.globalCompositeOperation = 'destination-in';
+                    ctx.drawImage(img, 0, 0, 2048, 2048);
+                    
+                    const dataUrl = canvas.toDataURL('image/png');
+                    tintedCache[key] = dataUrl;
+                    resolve(dataUrl);
+                };
+                img.onerror = () => resolve(baseSrc); // fallback ถ้าโหลดรูปไม่ขึ้น
+                img.src = baseSrc;
+            });
+        }
 
         function randomGreeting() {
             playSound('click');
@@ -461,7 +540,7 @@
             if (sShape === 'none' || sShape === 'off') { document.getElementById('chk-sub-crystal').checked = false; subMenu.style.display = 'none'; }
             
             if (!document.getElementById('chk-fix-y').checked) { document.getElementById('sub-head-y').value = 0; updateSubHeadY(); }
-            updateWand();
+            // ไม่เรียก updateWand() ตรงนี้ ป้องกันการทำงานซ้ำซ้อน เพราะเดี๋ยวจะถูกเรียกแยกกัน
         }
 
         function handleStarCrystals(id) {
@@ -484,26 +563,65 @@
             document.getElementById('c-sub-2').style.top = yOffset; document.getElementById('c-sub-4').style.top = yOffset;
         }
 
-        function updateWand() {
+        // --- เปลี่ยนให้รองรับการย้อมสี (Async) ---
+        async function updateWand() {
+            // Handle
             const hVal = getRadio('h-color');
-            if (hVal !== 'none') { document.getElementById('hand').src = PATH + hVal + '.png'; document.getElementById('hand').style.display = 'block'; } else { document.getElementById('hand').style.display = 'none'; }
+            if (hVal === 'custom') {
+                document.getElementById('hand').src = await getTintedImage(PATH + 'W1.png', document.getElementById('h-color-custom').value);
+                document.getElementById('hand').style.display = 'block';
+            } else if (hVal !== 'none') { 
+                document.getElementById('hand').src = PATH + hVal + '.png'; 
+                document.getElementById('hand').style.display = 'block'; 
+            } else { document.getElementById('hand').style.display = 'none'; }
 
+            // Base
             const bVal = getRadio('b-color');
-            if (bVal !== 'none') { document.getElementById('base').src = PATH + bVal + '.png'; document.getElementById('base').style.display = 'block'; } else { document.getElementById('base').style.display = 'none'; }
+            if (bVal === 'custom') {
+                document.getElementById('base').src = await getTintedImage(PATH + 'W2.png', document.getElementById('b-color-custom').value);
+                document.getElementById('base').style.display = 'block';
+            } else if (bVal !== 'none') { 
+                document.getElementById('base').src = PATH + bVal + '.png'; 
+                document.getElementById('base').style.display = 'block'; 
+            } else { document.getElementById('base').style.display = 'none'; }
             
+            // Main Head
             const mShape = getRadio('m-shape'); const mColor = getRadio('m-color');
-            if (mShape !== 'none' && mColor !== 'none') { document.getElementById('main-head').src = PATH + mColor + mShape + '.png'; document.getElementById('main-head').style.display = 'block'; } else { document.getElementById('main-head').style.display = 'none'; }
+            if (mShape !== 'none' && mColor !== 'none') { 
+                if (mColor === 'custom') {
+                    document.getElementById('main-head').src = await getTintedImage(PATH + 'W' + mShape + '.png', document.getElementById('m-color-custom').value);
+                } else {
+                    document.getElementById('main-head').src = PATH + mColor + mShape + '.png'; 
+                }
+                document.getElementById('main-head').style.display = 'block'; 
+            } else { document.getElementById('main-head').style.display = 'none'; }
 
+            // Sub Head
             const sShape = getRadio('s-shape'); const sColor = getRadio('s-color'); const subHead = document.getElementById('sub-head');
             if (sShape === 'none' || sShape === 'off' || sColor === 'none') { 
                 subHead.style.display = 'none'; document.getElementById('sub-head-adjust').style.display = 'none';
             } else { 
-                subHead.src = PATH + sColor + sShape + '.png'; subHead.style.display = 'block'; document.getElementById('sub-head-adjust').style.display = 'block';
+                if (sColor === 'custom') {
+                    subHead.src = await getTintedImage(PATH + 'W' + sShape + '.png', document.getElementById('s-color-custom').value);
+                } else {
+                    subHead.src = PATH + sColor + sShape + '.png'; 
+                }
+                subHead.style.display = 'block'; document.getElementById('sub-head-adjust').style.display = 'block';
             }
 
+            // Wings
             const wing = getRadio('w-color'); const wingsImg = document.getElementById('wings');
-            if (wing === 'none' || wing === 'off') { wingsImg.style.display = 'none'; } else { wingsImg.src = PATH + wing + '.png'; wingsImg.style.display = 'block'; }
+            if (wing === 'none' || wing === 'off') { 
+                wingsImg.style.display = 'none'; 
+            } else if (wing === 'custom') {
+                wingsImg.src = await getTintedImage(PATH + 'W9.png', document.getElementById('w-color-custom').value);
+                wingsImg.style.display = 'block';
+            } else { 
+                wingsImg.src = PATH + wing + '.png'; 
+                wingsImg.style.display = 'block'; 
+            }
 
+            // Crystals
             document.getElementById('c1-crystal').style.display = document.getElementById('chk-c1').checked ? 'block' : 'none';
             document.getElementById('c2-crystal').style.display = document.getElementById('chk-c2').checked ? 'block' : 'none';
 
@@ -530,13 +648,12 @@
             const mShape = getRadio('m-shape');
             const mColor = getRadio('m-color');
 
-            // Error Check - แจ้งเตือนเมื่อลืมเลือกชิ้นส่วนพื้นฐาน
             if (hVal === 'none' || bVal === 'none' || mShape === 'none' || mColor === 'none') {
                 alert("อ๊ะ เดี๋ยวก่อน เหมือนว่าคฑาจะยังไม่เสร็จนะ\nOops! Please select all the basic elements (Handle, Base, Main head)");
                 return;
             }
 
-            playSound('magic'); // เสียงเวทมนตร์ตอนกด YESSS
+            playSound('magic'); 
 
             const container = document.getElementById('sparkle-container');
             for(let i=0; i<30; i++) {
@@ -656,16 +773,12 @@
             const headEl = document.getElementById('main-head');
             const headStyle = window.getComputedStyle(headEl);
             let headOffsetY = 0;
-            if (headStyle.transform && headStyle.transform !== 'none') {
-                headOffsetY = new DOMMatrix(headStyle.transform).m42;
-            }
+            if (headStyle.transform && headStyle.transform !== 'none') { headOffsetY = new DOMMatrix(headStyle.transform).m42; }
 
             const fanEl = document.getElementById('fan');
             const fanStyle = window.getComputedStyle(fanEl);
             let fanOffsetY = 0;
-            if (fanStyle.transform && fanStyle.transform !== 'none') {
-                fanOffsetY = new DOMMatrix(fanStyle.transform).m42;
-            }
+            if (fanStyle.transform && fanStyle.transform !== 'none') { fanOffsetY = new DOMMatrix(fanStyle.transform).m42; }
 
             function draw(id, offsetY) {
                 const el = document.getElementById(id);
@@ -678,17 +791,9 @@
                         if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
                         
                         if (id === 'fan') {
-                            const tempCanvas = document.createElement('canvas');
-                            tempCanvas.width = 2048; 
-                            tempCanvas.height = 2048;
-                            const tCtx = tempCanvas.getContext('2d');
-                            
-                            tCtx.drawImage(el, 0, finalY, 2048, 2048);
-                            tCtx.globalCompositeOperation = 'source-atop';
-                            tCtx.fillStyle = 'rgba(255, 255, 255, 0.45)'; 
-                            tCtx.fillRect(0, 0, 2048, 2048);
-                            
-                            ctx.drawImage(tempCanvas, 0, 0, 2048, 2048);
+                            ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)';
+                            ctx.drawImage(el, 0, finalY, 2048, 2048);
+                            ctx.filter = 'none';
                         } else {
                             ctx.drawImage(el, 0, finalY, 2048, 2048);
                         }
