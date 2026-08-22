@@ -806,10 +806,23 @@
             }
         }
 
-                let isFanOpen = false; 
+                        let isFanOpen = false; 
         let isAnimating = false; 
+
+        // 🪄 โหลดรูปภาพเก็บไว้ในแคชล่วงหน้า ป้องกันอาการกระตุกตอนเปลี่ยนเฟรม
+        const fanSequencePaths = [
+            'F0.png', 'F0_1.png', 'F0_2.png', 'F0_3.png', 'F0_4.png', 'F0_5.png',
+            'F0_5_5.png', 'F0_6.png', 'F0_6_5.png', 'F0_7.png', 'F0_7_5.png',
+            'F0_8.png', 'F0_8_5.png', 'F0_9.png', 'F0_9_5.png', 'F1.png'
+        ];
+        const preloadedFanImgs = [];
+        fanSequencePaths.forEach(path => {
+            const img = new Image();
+            img.src = PATH + path;
+            preloadedFanImgs.push(img);
+        });
         
-        // --- ระบบปุ่มพรีวิว (เลื่อนให้เสร็จก่อน ค่อยกาง / หุบให้เสร็จก่อน ค่อยเลื่อนกลับ) ---
+        // --- ระบบปุ่มพรีวิวแบบ 20 เฟรมต่อวิ (50ms) สมูทๆ ไม่ข้ามเฟรม ---
         async function toggleFan() {
             if (isAnimating) return; 
             isAnimating = true;
@@ -818,31 +831,24 @@
             const fan = document.getElementById('fan'); 
             const headParts = document.querySelectorAll('.part-head'); 
             const sleep = ms => new Promise(r => setTimeout(r, ms));
-            
-            // ชุดภาพทั้ง 16 เฟรม
-            const fanSequence = [
-                'F0.png', 'F0_1.png', 'F0_2.png', 'F0_3.png', 'F0_4.png', 'F0_5.png',
-                'F0_5_5.png', 'F0_6.png', 'F0_6_5.png', 'F0_7.png', 'F0_7_5.png',
-                'F0_8.png', 'F0_8_5.png', 'F0_9.png', 'F0_9_5.png', 'F1.png'
-            ];
 
             if (!isFanOpen) {
                 playSound('fan_open'); 
                 btn.innerHTML = "ON"; btn.classList.add('active'); 
                 
-                // สเต็ป 1: ให้ใบพัด F0 (แบบหุบ) โผล่ขึ้นมา พร้อมกับหัวคฑาที่เลื่อนลง
-                fan.src = PATH + fanSequence[0];
+                // สเต็ป 1: ดึงชิ้นส่วนลง + ดึงใบพัดแบบหุบ (F0) ขึ้นมา
+                fan.src = preloadedFanImgs[0].src;
                 headParts.forEach(el => el.classList.add('move-down')); 
                 fan.classList.remove('hidden-down'); 
                 fan.classList.add('show-up');
                 
-                // รอให้ชิ้นส่วนเลื่อนลงมาจนสุดก่อน (ตาม CSS คือ 0.6 วิ)
+                // รอจนชิ้นส่วนเลื่อนลงมาเสร็จ (0.6 วิ)
                 await sleep(600);
                 
-                // สเต็ป 2: เมื่อจอดสนิทแล้ว ค่อยๆ กางใบพัดออก (ใช้เวลา ~0.6 วิ)
+                // สเต็ป 2: ค่อยๆ กางใบพัด 20 fps (เฟรมละ 50ms)
                 for(let i=1; i<=15; i++) {
-                    fan.src = PATH + fanSequence[i];
-                    await sleep(40); 
+                    fan.src = preloadedFanImgs[i].src;
+                    await sleep(50); 
                 }
                 
                 isFanOpen = true; 
@@ -851,18 +857,17 @@
                 playSound('fan_close');
                 btn.innerHTML = "OFF"; btn.classList.remove('active'); 
                 
-                // สเต็ป 1: ค่อยๆ หุบใบพัดกลับเป็น F0 ให้เสร็จก่อน (ใช้เวลา ~0.6 วิ)
+                // สเต็ป 1: ค่อยๆ หุบใบพัดทีละเฟรม 20 fps (เฟรมละ 50ms) จนสนิท
                 for(let i=14; i>=0; i--) {
-                    fan.src = PATH + fanSequence[i];
-                    await sleep(40);
+                    fan.src = preloadedFanImgs[i].src;
+                    await sleep(50);
                 }
                 
-                // สเต็ป 2: เมื่อหุบสุดแล้ว ให้ดึงหัวคฑาขึ้น และซ่อนใบพัดกลับลงไป
+                // สเต็ป 2: ดึงหัวคฑากลับ + ซ่อนใบพัดลง
                 headParts.forEach(el => el.classList.remove('move-down')); 
                 fan.classList.remove('show-up'); 
                 fan.classList.add('hidden-down'); 
                 
-                // รอให้ชิ้นส่วนเลื่อนกลับเข้าที่ (ตาม CSS คือ 0.6 วิ)
                 await sleep(600);
                 
                 isFanOpen = false; 
@@ -870,8 +875,8 @@
             }
         }
 
-        // ==========================================
-        // ฟังก์ชันช่วยวาด Canvas (แก้ปัญหา iOS สีดรอปด้วยการถมขาวแทน Filter)
+                // ==========================================
+        // ฟังก์ชันช่วยวาด Canvas (ดึงสี Brightness กลับมาตามความต้องการ)
         // ==========================================
         function drawCurrentDOMToCanvas(ctx, scaleTo = 2048) {
             ctx.clearRect(0, 0, scaleTo, scaleTo);
@@ -915,25 +920,16 @@
                         let finalY = offsetY;
                         if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
                         
+                        // 🪄 ใช้ Filter ปรับความสว่างตามโค้ดดั้งเดิม
                         if (id === 'fan') {
-                            // 🪄 วิธีแก้ปัญหา iOS: สร้าง Canvas จำลองสร้างสีขาวทับเพื่อปรับสว่าง (แทนการใช้ Filter)
-                            const tempCanvas = document.createElement('canvas');
-                            tempCanvas.width = 2048; 
-                            tempCanvas.height = 2048;
-                            const tCtx = tempCanvas.getContext('2d');
-                            
-                            tCtx.drawImage(el, 0, finalY, 2048, 2048);
-                            
-                            // ถมสีขาวแบบบางๆ (0.45) ลงเฉพาะส่วนที่มีใบพัด เพื่อให้ภาพดูสว่างขึ้น
-                            tCtx.globalCompositeOperation = 'source-atop';
-                            tCtx.fillStyle = 'rgba(255, 255, 255, 0.45)'; 
-                            tCtx.fillRect(0, 0, 2048, 2048);
-                            
-                            ctx.drawImage(tempCanvas, 0, 0, 2048, 2048);
+                            ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)';
                         } else {
-                            ctx.drawImage(el, 0, finalY, 2048, 2048);
+                            ctx.filter = 'none';
                         }
                         
+                        ctx.drawImage(el, 0, finalY, 2048, 2048);
+                        
+                        ctx.filter = 'none';
                         ctx.globalAlpha = 1.0; 
                     }
                 }
