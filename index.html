@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make your own Magic Wand!</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
 
     <style>
@@ -97,8 +98,12 @@
 
         .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; align-items: center; }
         .fan-section { background: rgba(255,255,255,0.85); padding: 15px 25px; border-radius: 20px; text-align: center; border: 2px dashed #ffb6c1; backdrop-filter: blur(5px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); margin-bottom: 5px; width: 95%; box-sizing: border-box;}
-        .bg-controls { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; backdrop-filter: blur(5px); }
         
+        /* สไตล์สำหรับข้อความเชิญชวน เพื่อให้ปรับแก้ในมือถือได้ง่าย */
+        .fun-text { font-size: 16px; font-weight: bold; color: var(--pink-accent); margin: 0 0 10px 0; line-height: 1.6; }
+        .fun-subtext { font-size: 14px; color: var(--brown-accent); }
+
+        .bg-controls { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; backdrop-filter: blur(5px); }
         .bg-picker { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--text-maroon); cursor: pointer; padding: 0; flex-shrink: 0; }
         .bg-picker::-webkit-color-swatch-wrapper { padding: 0; } .bg-picker::-webkit-color-swatch { border: none; }
         .btn-small { background: #fff0f5; border: 1px solid #ffb6c1; padding: 8px 12px; border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: bold; color: var(--text-maroon); transition: 0.2s; font-size: 13px; }
@@ -126,12 +131,15 @@
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
             .control-group:last-child { border-bottom: none; }
             .crystal-section { grid-column: span 1; }
+            
             .preview-box { height: 320px; } #screen-result .preview-box { height: 400px; }
             h1 { font-size: 22px; margin-bottom: 15px; }
             .action-bar { flex-direction: column; gap: 15px; }
             .bg-controls { width: 100%; padding: 10px; }
-            .action-buttons { gap: 10px; width: 100%; justify-content: center; }
-            .btn-save { padding: 10px 15px; font-size: 16px; }
+            
+            /* ลดขนาดฟอนต์บนมือถือเพื่อไม่ให้วรรณยุกต์ซ้อนทับกัน */
+            .fun-text { font-size: 14px; line-height: 1.8; }
+            .fun-subtext { font-size: 12px; }
         }
     </style>
 </head>
@@ -265,9 +273,9 @@
             <div class="action-bar">
                 
                 <div class="fan-section">
-                    <p style="font-size: 16px; font-weight: bold; color: var(--pink-accent); margin: 0 0 10px 0; line-height: 1.4;">
+                    <p class="fun-text">
                         อยากลองอะไรสนุก ๆ ไหม? ลองกดปุ่มนี้ดูสิ!<br>
-                        <span style="font-size: 14px; color: var(--brown-accent);">Wanna try something fun? Click the button!</span>
+                        <span class="fun-subtext">Wanna try something fun? Click the button!</span>
                     </p>
                     <button class="push-btn" id="btn-fan-toggle" onclick="toggleFan()">OFF</button>
                 </div>
@@ -290,11 +298,12 @@
                     
                     <div style="width: 100%; height: 1px; background: #ffe4e1; margin: 8px 0;"></div>
 
+                    <!-- ตามบรีฟล่าสุด -->
                     <input type="color" id="bg-color" class="bg-picker" value="#ffffff" onchange="setBgMode('color')" title="เลือกสีพื้นหลัง">
                     <select id="sel-preset-bg" class="btn-small" style="appearance: auto;" onchange="setBgMode('preset')">
                         <option value="assets/bgsave_2.jpg">✨ ลายกระดาษ (Default)</option>
-                        <option value="assets/bgsave1.jpg">ฉากที่ 1 </option>
-                        <option value="assets/bgsave2.jpg">ฉากที่ 2 </option>
+                        <option value="assets/bgsave1.jpg">ฉากที่ 1</option>
+                        <option value="assets/bgsave2.jpg">ฉากที่ 2</option>
                     </select>
                     <button class="btn-small" onclick="document.getElementById('bg-upload').click()">🖼️ อัปโหลด</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
@@ -302,11 +311,19 @@
                     
                     <img id="uploaded-bg-img" style="display:none;">
                     <img id="preset-bg-img" src="assets/bgsave_2.jpg" style="display:none;">
+                    
+                    <div style="width: 100%; text-align: center; font-size: 11px; color: #999; margin-top: 5px;">*แนะนำภาพอัปโหลดขนาด 2048x2048 px</div>
                 </div>
 
-                <div class="action-buttons">
-                    <button class="btn-save" id="btn-save" onclick="exportToImage()">SAVE PNG</button>
-                    <button class="btn-save" id="btn-save-gif" onclick="exportToGIF()" style="background: var(--pink-accent); color: white; border-color: var(--pink-accent);">SAVE GIF</button>
+                <div class="action-buttons" style="flex-direction: column; gap: 5px;">
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button class="btn-save" id="btn-save" onclick="exportToImage()">SAVE PNG</button>
+                        <button class="btn-save" id="btn-save-gif" onclick="exportToGIF()" style="background: var(--pink-accent); color: white; border-color: var(--pink-accent);">SAVE GIF</button>
+                    </div>
+                    <!-- ข้อความเตือนตอนเซฟ GIF (จะโชว์ก็ต่อเมื่อกดปุ่ม) -->
+                    <div id="encoding-warning" style="display: none; color: #ff6b81; font-size: 13px; font-weight: bold; text-align: center; margin-top: 5px; line-height: 1.4;">
+                        ⏳ ขณะทำการบันทึก GIF<br>อย่าพึ่งปรับพื้นหลังและตัวหนังสือน้า กรุณารอสักครู่...
+                    </div>
                 </div>
             </div>
         </div>
@@ -506,14 +523,14 @@
             }
         }
 
-        // --- ระบบแปลงร่าง & Error Check ก่อนส่ง ---
+        // --- ระบบ Error Check และ แปลงร่าง ---
         function triggerMagicEffect() {
-            // เช็คตัวบังคับ: Handle, Base, Mainhead ต้องถูกเลือกครบทั้งรูปทรงและสี
             const hVal = getRadio('h-color');
             const bVal = getRadio('b-color');
             const mShape = getRadio('m-shape');
             const mColor = getRadio('m-color');
 
+            // Error Check - แจ้งเตือนเมื่อลืมเลือกชิ้นส่วนพื้นฐาน
             if (hVal === 'none' || bVal === 'none' || mShape === 'none' || mColor === 'none') {
                 alert("อ๊ะ เดี๋ยวก่อน เหมือนว่าคฑาจะยังไม่เสร็จนะ\nOops! Please select all the basic elements (Handle, Base, Main head)");
                 return;
@@ -616,7 +633,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันช่วยวาด Canvas (แก้ปัญหา iOS สีดรอปด้วยการถมขาวแทน Filter)
+        // ฟังก์ชันช่วยวาด Canvas
         // ==========================================
         function drawCurrentDOMToCanvas(ctx, scaleTo = 2048) {
             ctx.clearRect(0, 0, scaleTo, scaleTo);
@@ -661,15 +678,12 @@
                         if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
                         
                         if (id === 'fan') {
-                            // วิธีแก้ปัญหา iOS: ใช้ Canvas จำลองสร้างสีขาวทับแทนการใช้ ctx.filter โดยตรง
                             const tempCanvas = document.createElement('canvas');
                             tempCanvas.width = 2048; 
                             tempCanvas.height = 2048;
                             const tCtx = tempCanvas.getContext('2d');
                             
                             tCtx.drawImage(el, 0, finalY, 2048, 2048);
-                            
-                            // ถมสีขาวแบบบางๆ ลงเฉพาะส่วนที่มีใบพัด เพื่อให้ภาพดูสว่างขึ้น (จำลอง Brightness)
                             tCtx.globalCompositeOperation = 'source-atop';
                             tCtx.fillStyle = 'rgba(255, 255, 255, 0.45)'; 
                             tCtx.fillRect(0, 0, 2048, 2048);
@@ -723,8 +737,11 @@
         async function exportToGIF() {
             playSound('click');
             const btn = document.getElementById('btn-save-gif');
+            const warningText = document.getElementById('encoding-warning');
+            
             btn.innerHTML = "Recording... ⏳";
             btn.disabled = true; document.getElementById('btn-save').disabled = true;
+            warningText.style.display = 'block';
 
             try {
                 const res = await fetch('https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js');
@@ -771,6 +788,7 @@
                     setTimeout(() => { document.body.removeChild(link); }, 100);
 
                     btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
+                    warningText.style.display = 'none';
                 });
 
                 gif.render();
@@ -779,6 +797,7 @@
                 console.error(error);
                 alert("เกิดข้อผิดพลาดในการบันทึก GIF แนะนำให้ลองเปิดในเบราว์เซอร์ Chrome หรือ Safari ค่ะ");
                 btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
+                warningText.style.display = 'none';
             }
         }
 
