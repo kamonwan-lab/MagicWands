@@ -46,7 +46,10 @@
         .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 10; }
         .color-radio { display: none; }
         .color-label { display: inline-block; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .color-radio:checked + .color-label { border-color: var(--pink-accent); transform: scale(1.3); }
+        
+        /* แก้ปุ่ม ❌ ของ Wings ให้เปลี่ยนสีเวลากด */
+        .color-radio:checked + .color-label, .color-radio:checked + .shape-icon { border-color: var(--pink-accent); transform: scale(1.3); background-color: #fff0f5; }
+        
         .color-label.white { background-color: #f8f9fa; }
         .color-label.pink { background-color: rgb(250, 173, 255); }
         .color-label.blue { background-color: rgb(122, 228, 255); } 
@@ -93,26 +96,29 @@
         #fan.hidden-down { transform: translateY(1000px); opacity: 0; }
         #fan.show-up { transform: translateY(0); opacity: 1; }
 
-        .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: center; }
+        /* Screen 2 Result Controls */
+        .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; align-items: center; }
+        .fan-section { background: rgba(255,255,255,0.85); padding: 15px 25px; border-radius: 20px; text-align: center; border: 2px dashed #ffb6c1; backdrop-filter: blur(5px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); margin-bottom: 5px; }
         .bg-controls { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; backdrop-filter: blur(5px); }
+        
         .bg-picker { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--text-maroon); cursor: pointer; padding: 0; flex-shrink: 0; }
         .bg-picker::-webkit-color-swatch-wrapper { padding: 0; } .bg-picker::-webkit-color-swatch { border: none; }
         .btn-small { background: #fff0f5; border: 1px solid #ffb6c1; padding: 8px 12px; border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: bold; color: var(--text-maroon); transition: 0.2s; font-size: 13px; }
         .btn-small:hover { background: #ffe4e1; }
         .transparent-label { font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
-        .action-buttons { display: flex; gap: 30px; align-items: center; }
+        .action-buttons { display: flex; gap: 30px; align-items: center; margin-top: 5px; }
         .push-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #ffffff, #e6e6e6); border: none; box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px #ffffff; font-family: inherit; font-weight: 900; font-size: 20px; color: var(--text-maroon); cursor: pointer; transition: all 0.2s; }
         .push-btn.active { background: #ffffff; box-shadow: inset 5px 5px 10px #d9d9d9, inset -5px -5px 10px #ffffff; color: var(--pink-accent); }
-        .btn-save { padding: 10px 30px; font-size: 20px; font-weight: 900; color: var(--text-maroon); background: #fff; border: 2px solid var(--text-maroon); border-radius: 30px; cursor: pointer; font-family: inherit; transition: 0.2s; }
-        .btn-save:hover { background: var(--text-maroon); color: #fff; }
+        .btn-save { padding: 12px 40px; font-size: 22px; font-weight: 900; color: var(--text-maroon); background: #fff; border: 2px solid var(--text-maroon); border-radius: 30px; cursor: pointer; font-family: inherit; transition: 0.2s; box-shadow: 0 4px 10px rgba(94, 17, 21, 0.2); }
+        .btn-save:hover { background: var(--text-maroon); color: #fff; transform: translateY(-3px); }
         .btn-back { position: absolute; top: -15px; left: 0; background: none; border: none; color: var(--text-maroon); font-family: inherit; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; opacity: 0.7; transition: 0.2s; }
         .btn-back:hover { opacity: 1; text-decoration: underline; }
+        
         #sparkle-container { position: fixed; top:0; left:0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
         .sparkle { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px #ffb6c1; animation: pop 1s ease-out forwards; }
         @keyframes pop { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5) translateY(-50px); opacity: 0; } }
         .checkerboard { background-color: transparent !important; background-image: repeating-linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), repeating-linear-gradient(45deg, #f0f0f0 25%, #ffffff 25%, #ffffff 75%, #f0f0f0 75%, #f0f0f0) !important; background-position: 0 0, 20px 20px !important; background-size: 40px 40px !important; }
 
-        /* Modal สำหรับ iOS Safari Fallback */
         .save-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
         .save-modal-content { background: var(--bg-cream); padding: 20px; border-radius: 20px; text-align: center; width: 100%; max-width: 450px; border: 3px solid #ffccd5; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
@@ -202,7 +208,8 @@
                 <div class="control-group">
                     <h3>Wings ปีก</h3>
                     <div class="color-group" style="flex-wrap: wrap;">
-                        <label><input type="radio" name="w-color" value="off" class="color-radio"><span class="shape-icon" style="width: 25px; height: 25px; font-size: 12px; border-radius: 5px;">❌</span></label>
+                        <!-- ใช้ class color-radio เหมือนกันเพื่อให้โชว์ขอบสีชมพูเวลากด -->
+                        <label><input type="radio" name="w-color" value="off" class="color-radio"><span class="shape-icon" style="width: 25px; height: 25px; font-size: 12px; border-radius: 5px; filter: grayscale(0%); opacity: 1;">❌</span></label>
                         <span style="font-size: 14px; margin: 0 5px; color:#ccc;">or</span>
                         <span class="color-text">colour</span>
                         <label><input type="radio" name="w-color" value="W9" class="color-radio"><span class="color-label white"></span></label>
@@ -237,15 +244,19 @@
                     <img id="fan" src="assets/F0.png" class="layer hidden-down">
                     <img id="hand" src="" class="layer">
                     <img id="c1-crystal" src="assets/C1.png" class="layer crystal-layer">
+                    
                     <img id="base" src="" class="layer part-head">
                     <img id="wings" src="" class="layer part-head">
                     <img id="main-head" src="" class="layer part-head">
+                    
                     <img id="sub-head" src="" class="layer part-head">
                     <img id="c2-crystal" src="assets/C2.png" class="layer crystal-layer part-head">
+                    
                     <img id="c-main-1" src="" class="layer crystal-layer part-head">
                     <img id="c-main-3" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-2" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-4" src="" class="layer crystal-layer part-head">
+
                     <canvas id="text-canvas" width="2048" height="2048" class="layer"></canvas>
                 </div>
             </div>
@@ -259,6 +270,16 @@
             <div class="preview-box" id="result-preview-box"></div>
 
             <div class="action-bar">
+                
+                <!-- ย้ายปุ่ม ON/OFF พัดขึ้นมาไว้เหนือสุด -->
+                <div class="fan-section">
+                    <p style="font-size: 16px; font-weight: bold; color: var(--pink-accent); margin: 0 0 10px 0; line-height: 1.4;">
+                        อยากลองอะไรสนุก ๆ ไหม? ลองกดปุ่มนี้ดูสิ!<br>
+                        <span style="font-size: 14px; color: var(--brown-accent);">Wanna try something fun? Click the button!</span>
+                    </p>
+                    <button class="push-btn" id="btn-fan-toggle" onclick="toggleFan()">OFF</button>
+                </div>
+
                 <div class="bg-controls">
                     <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Settings</div>
                     
@@ -280,8 +301,8 @@
                     <input type="color" id="bg-color" class="bg-picker" value="#ffffff" onchange="setBgMode('color')" title="เลือกสีพื้นหลัง">
                     <select id="sel-preset-bg" class="btn-small" style="appearance: auto;" onchange="setBgMode('preset')">
                         <option value="assets/bgsave_2.jpg">✨ ลายกระดาษ (Default)</option>
-                        <option value="assets/bgsave1.jpg">ฉากที่ 1 </option>
-                        <option value="assets/bgsave2.jpg">ฉากที่ 2 </option>
+                        <option value="assets/bgsave1.jpg">ฉากที่ 1 (กำลังพัฒนาจ้า)</option>
+                        <option value="assets/bgsave2.jpg">ฉากที่ 2 (กำลังพัฒนาจ้า)</option>
                     </select>
                     <button class="btn-small" onclick="document.getElementById('bg-upload').click()">🖼️ อัปโหลด</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
@@ -292,26 +313,24 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="push-btn" id="btn-fan-toggle" onclick="toggleFan()">OFF</button>
                     <button class="btn-save" onclick="exportToImage()">SAVE</button>
                 </div>
             </div>
-            
-            <div style="text-align: right; margin-top: 10px; font-size: 12px; font-style: italic; color: #ff8ca3; text-shadow: 1px 1px 0 #fff;">Design by you! &nbsp;&nbsp;&nbsp; By : EmanonMUI</div>
         </div>
 
         <div id="sparkle-container"></div>
         
-        <!-- Modal แจ้งเตือนเซฟรูปสำหรับ iOS Safari -->
+        <!-- Modal ของ iOS Safari -->
         <div id="save-modal" class="save-modal-overlay">
             <div class="save-modal-content">
-                <h2 style="margin-top: 0; color: var(--pink-accent); font-size: 22px;">🪄 เสร็จสมบูรณ์!</h2>
+                <h2 style="margin-top: 0; color: var(--pink-accent); font-size: 22px; margin-bottom: 5px;">🪄พร้อมร่ายคาถาแล้ว!<br><span style="font-size: 16px; color: var(--brown-accent);">Let's test the wand!</span></h2>
                 <p style="color: var(--text-maroon); font-size: 14px; margin-bottom: 15px; line-height: 1.5;">
                     หากภาพไม่ดาวน์โหลดอัตโนมัติ<br>ให้ <b>"แตะค้างที่รูปภาพด้านล่าง"</b> แล้วเลือกบันทึก ⬇️
                 </p>
-                <div style="max-height: 45vh; overflow-y: auto; border-radius: 15px; margin-bottom: 20px; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <div style="max-height: 45vh; overflow-y: auto; border-radius: 15px; margin-bottom: 15px; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                     <img id="final-img-preview" src="" style="width: 100%; height: auto; display: block;">
                 </div>
+                <p style="font-size: 14px; color: var(--pink-accent); font-weight: bold; margin-top: 0px; margin-bottom: 15px;">ขอบพระคุณผู้วิเศษทุกท่านที่มาร่วมสนุก ✨</p>
                 <button onclick="document.getElementById('save-modal').style.display='none'" class="btn-save" style="font-size: 16px; padding: 8px 40px;">ปิดหน้าต่าง</button>
             </div>
         </div>
@@ -320,6 +339,11 @@
 
     <script>
         const PATH = 'assets/';
+        
+        // -------------------------------------------------------------
+        // หากต้องการเพิ่มข้อความสุ่ม ให้พิมพ์เพิ่มในวงเล็บ [ ] นี้ได้เลยค่ะ
+        // อย่าลืมใส่ลูกน้ำ (,) คั่นระหว่างประโยคด้วยนะคะ
+        // -------------------------------------------------------------
         const greetingsList = [
             "✨May your life be magical!✨",
             "✨Balachoo Bachoo!✨",
@@ -331,10 +355,19 @@
             return el ? el.value : 'none';
         };
 
+        // --- ระบบเสียง (Sound System) ---
+        function playSound(type) {
+            // ระบบจะพยายามเล่นเสียง ถ้าไฟล์ไม่มีก็จะไม่พังค่ะ
+            const audio = new Audio(`assets/${type}.mp3`);
+            audio.play().catch(e => { /* ละทิ้ง Error กรณีเบราว์เซอร์บล็อกเสียงก่อนผู้ใช้กดจอ */ });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            // ดักการกดปุ่ม Radio เพื่อเล่นเสียง 'click'
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(radio => {
                 radio.addEventListener('mousedown', function() { this.dataset.isChecked = this.checked; });
                 radio.addEventListener('click', function() {
+                    playSound('click'); // เล่นเสียงคลิก
                     if (this.dataset.isChecked === 'true') { this.checked = false; this.dataset.isChecked = 'false'; } 
                     else { this.dataset.isChecked = 'true'; }
                     updateUI(); updateWand();
@@ -346,6 +379,7 @@
         });
 
         function randomGreeting() {
+            playSound('click');
             const randomText = greetingsList[Math.floor(Math.random() * greetingsList.length)];
             document.getElementById('greeting-text').value = randomText;
             updateTextPreview();
@@ -404,17 +438,17 @@
             const sShape = getRadio('s-shape');
             const mainMenu = document.getElementById('main-crystal-menu');
             let mHtml = '';
-            if (mShape === '3') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> Type 1</label>`; } 
-            else if (mShape === '4') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="handleStarCrystals('cm_1')"> Type 1</label><br><label><input type="checkbox" id="cm_3" onchange="handleStarCrystals('cm_3')"> Type 2</label>`; } 
-            else if (mShape === '5') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="updateWand()"> Type 1</label>`; }
+            if (mShape === '3') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="playSound('click'); updateWand()"> Type 1</label>`; } 
+            else if (mShape === '4') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="playSound('click'); handleStarCrystals('cm_1')"> Type 1</label><br><label><input type="checkbox" id="cm_3" onchange="playSound('click'); handleStarCrystals('cm_3')"> Type 2</label>`; } 
+            else if (mShape === '5') { mHtml = `<label><input type="checkbox" id="cm_1" onchange="playSound('click'); updateWand()"> Type 1</label>`; }
             mainMenu.innerHTML = mHtml;
 
             const subMenu = document.getElementById('sub-crystal-menu');
             let sHtml = '';
             if (sShape === 'none' || sShape === 'off') { sHtml = '<small style="color:#999;">No sub-head selected</small>'; document.getElementById('chk-sub-crystal').checked = false; } 
-            else if (sShape === '6') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> Type 1</label>`; } 
-            else if (sShape === '7') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="handleStarCrystals('cs_2')"> Type 1</label><br><label><input type="checkbox" id="cs_4" onchange="handleStarCrystals('cs_4')"> Type 2</label>`; } 
-            else if (sShape === '8') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="updateWand()"> Type 1</label>`; }
+            else if (sShape === '6') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="playSound('click'); updateWand()"> Type 1</label>`; } 
+            else if (sShape === '7') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="playSound('click'); handleStarCrystals('cs_2')"> Type 1</label><br><label><input type="checkbox" id="cs_4" onchange="playSound('click'); handleStarCrystals('cs_4')"> Type 2</label>`; } 
+            else if (sShape === '8') { sHtml = `<label><input type="checkbox" id="cs_2" onchange="playSound('click'); updateWand()"> Type 1</label>`; }
             subMenu.innerHTML = sHtml;
 
             if (mShape === 'none') { document.getElementById('chk-main-crystal').checked = false; mainMenu.style.display = 'none'; }
@@ -433,6 +467,7 @@
         }
 
         function toggleCrystalMenu(type) {
+            playSound('click');
             const isChecked = document.getElementById(`chk-${type}-crystal`).checked;
             document.getElementById(`${type}-crystal-menu`).style.display = isChecked ? 'flex' : 'none'; updateWand();
         }
@@ -482,7 +517,22 @@
             }
         }
 
+        // --- ระบบแปลงร่าง & Error Check ก่อนส่ง ---
         function triggerMagicEffect() {
+            // เช็คตัวบังคับ: Handle, Base, Mainhead ต้องถูกเลือก
+            const hVal = getRadio('h-color');
+            const bVal = getRadio('b-color');
+            const mShape = getRadio('m-shape');
+            const mColor = getRadio('m-color');
+
+            if (hVal === 'none' || bVal === 'none' || mShape === 'none' || mColor === 'none') {
+                alert("อ๊ะ เดี๋ยวก่อน เหมือนว่าคฑาจะยังไม่เสร็จนะ\nOops! Please select all the basic elements (Handle, Base, Main head)");
+                return;
+            }
+
+            // ถ้าผ่าน ให้เล่นเสียงเสกคาถาและแปลงร่าง
+            playSound('magic');
+
             const container = document.getElementById('sparkle-container');
             for(let i=0; i<30; i++) {
                 setTimeout(() => {
@@ -505,6 +555,7 @@
         }
 
         function backToDesign() {
+            playSound('click');
             document.getElementById('screen-result').classList.add('fade-out');
             setTimeout(() => {
                 document.getElementById('screen-result').style.display = 'none'; document.getElementById('screen-result').classList.remove('fade-out');
@@ -530,6 +581,7 @@
         }
 
         function setBgMode(mode) {
+            playSound('click');
             currentBgMode = mode;
             const wandDom = document.getElementById('wand-dom');
             wandDom.className = 'wand-scaler'; 
@@ -563,25 +615,24 @@
             if (isAnimating) return; isAnimating = true;
             const btn = document.getElementById('btn-fan-toggle'); const fan = document.getElementById('fan'); const headParts = document.querySelectorAll('.part-head'); 
             if (!isFanOpen) {
+                playSound('fan_open'); // เสียงกางพัด
                 btn.innerHTML = "ON"; btn.classList.add('active'); fan.src = PATH + 'F0.png';
                 headParts.forEach(el => el.classList.add('move-down')); fan.classList.remove('hidden-down'); fan.classList.add('show-up');
                 setTimeout(() => { fan.src = PATH + 'F_animate.gif?' + Date.now(); setTimeout(() => { fan.src = PATH + 'F1.png'; isFanOpen = true; isAnimating = false; }, gifDuration); }, 600);
             } else {
+                playSound('fan_close'); // เสียงหุบพัด
                 btn.innerHTML = "OFF"; btn.classList.remove('active'); fan.src = PATH + 'F_animate_in.gif?' + Date.now();
                 setTimeout(() => { fan.src = PATH + 'F0.png'; headParts.forEach(el => el.classList.remove('move-down')); fan.classList.remove('show-up'); fan.classList.add('hidden-down'); setTimeout(() => { isFanOpen = false; isAnimating = false; }, 600); }, gifDuration);
             }
         }
 
-        // ==========================================
-        // อัปเดตระบบ Export ช่วยแก้ปัญหาบน iOS Safari
-        // ==========================================
         async function exportToImage() {
+            playSound('click');
             const btn = document.querySelector('.btn-save'); btn.innerHTML = "Saving...";
             
             const canvas = document.createElement('canvas'); canvas.width = 2048; canvas.height = 2048;
             const ctx = canvas.getContext('2d');
 
-            // 1. วาดพื้นหลัง
             if (currentBgMode !== 'transparent') {
                 if (currentBgMode === 'color') {
                     ctx.fillStyle = document.getElementById('bg-color').value; ctx.fillRect(0, 0, 2048, 2048);
@@ -610,45 +661,30 @@
                 });
             };
 
-            // 2. วาดชิ้นส่วนไม้คฑา
             await drawImg('fan'); await drawImg('hand'); await drawImg('base');
             await drawImg('wings'); await drawImg('main-head'); await drawImg('sub-head');
             await drawImg('c1-crystal'); await drawImg('c2-crystal');
             await drawImg('c-main-1'); await drawImg('c-main-3'); await drawImg('c-sub-2'); await drawImg('c-sub-4');
 
-            // 3. วาดข้อความโค้ง
             if (document.getElementById('chk-show-text').checked) {
                 ctx.drawImage(document.getElementById('text-canvas'), 0, 0);
             }
 
-            // 4. ลายน้ำห้ามลบ
             ctx.font = "italic 36px 'Mali', sans-serif"; ctx.fillStyle = "#5e1115"; ctx.textAlign = "right";
             ctx.lineWidth = 5; ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
             ctx.strokeText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
             ctx.fillText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
 
-            // 5. แปลง Canvas เป็น Blob เพื่อหลีกเลี่ยงปัญหาไฟล์ใหญ่ใน Safari
             canvas.toBlob(function(blob) {
                 const url = URL.createObjectURL(blob);
-                
-                // เอารูปมาใส่ใน Popup ให้ผู้ใช้แตะค้างเพื่อบันทึกด้วย (ครอบคลุม 100% สำหรับ iOS)
                 document.getElementById('final-img-preview').src = url;
                 document.getElementById('save-modal').style.display = 'flex';
                 
-                // ลองสั่งดาวน์โหลดอัตโนมัติควบคู่ไปด้วย (แปะลิงก์ใน body เพื่อช่วย Safari)
                 const link = document.createElement('a');
-                link.style.display = 'none';
-                link.href = url;
-                link.download = 'MyMagicWand.png';
-                document.body.appendChild(link);
-                link.click();
+                link.style.display = 'none'; link.href = url; link.download = 'MyMagicWand.png';
+                document.body.appendChild(link); link.click();
                 
-                // ล้างไฟล์ขยะและรีเซ็ตปุ่ม
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    btn.innerHTML = "SAVE";
-                }, 100);
-
+                setTimeout(() => { document.body.removeChild(link); btn.innerHTML = "SAVE"; }, 100);
             }, 'image/png');
         }
 
