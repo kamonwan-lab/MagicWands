@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make your own Magic Wand!</title>
+    
+    <!-- นำเข้าไลบรารีสำหรับประมวลผลไฟล์ GIF บนเบราว์เซอร์ -->
+    <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap');
@@ -46,10 +50,7 @@
         .color-group { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 10; }
         .color-radio { display: none; }
         .color-label { display: inline-block; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
-        /* แก้ปุ่ม ❌ ของ Wings ให้เปลี่ยนสีเวลากด */
         .color-radio:checked + .color-label, .color-radio:checked + .shape-icon { border-color: var(--pink-accent); transform: scale(1.3); background-color: #fff0f5; }
-        
         .color-label.white { background-color: #f8f9fa; }
         .color-label.pink { background-color: rgb(250, 173, 255); }
         .color-label.blue { background-color: rgb(122, 228, 255); } 
@@ -96,9 +97,8 @@
         #fan.hidden-down { transform: translateY(1000px); opacity: 0; }
         #fan.show-up { transform: translateY(0); opacity: 1; }
 
-        /* Screen 2 Result Controls */
         .action-bar { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; align-items: center; }
-        .fan-section { background: rgba(255,255,255,0.85); padding: 15px 25px; border-radius: 20px; text-align: center; border: 2px dashed #ffb6c1; backdrop-filter: blur(5px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); margin-bottom: 5px; }
+        .fan-section { background: rgba(255,255,255,0.85); padding: 15px 25px; border-radius: 20px; text-align: center; border: 2px dashed #ffb6c1; backdrop-filter: blur(5px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); margin-bottom: 5px; width: 95%; box-sizing: border-box;}
         .bg-controls { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.85); padding: 15px; border-radius: 20px; border: 2px dashed #ffccd5; width: 95%; justify-content: center; flex-wrap: wrap; box-sizing: border-box; backdrop-filter: blur(5px); }
         
         .bg-picker { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--text-maroon); cursor: pointer; padding: 0; flex-shrink: 0; }
@@ -106,10 +106,10 @@
         .btn-small { background: #fff0f5; border: 1px solid #ffb6c1; padding: 8px 12px; border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: bold; color: var(--text-maroon); transition: 0.2s; font-size: 13px; }
         .btn-small:hover { background: #ffe4e1; }
         .transparent-label { font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
-        .action-buttons { display: flex; gap: 30px; align-items: center; margin-top: 5px; }
-        .push-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #ffffff, #e6e6e6); border: none; box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px #ffffff; font-family: inherit; font-weight: 900; font-size: 20px; color: var(--text-maroon); cursor: pointer; transition: all 0.2s; }
+        .action-buttons { display: flex; gap: 15px; align-items: center; margin-top: 5px; justify-content: center; flex-wrap: wrap;}
+        .push-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #ffffff, #e6e6e6); border: none; box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px #ffffff; font-family: inherit; font-weight: 900; font-size: 20px; color: var(--text-maroon); cursor: pointer; transition: all 0.2s; margin: 0 auto; display: block; }
         .push-btn.active { background: #ffffff; box-shadow: inset 5px 5px 10px #d9d9d9, inset -5px -5px 10px #ffffff; color: var(--pink-accent); }
-        .btn-save { padding: 12px 40px; font-size: 22px; font-weight: 900; color: var(--text-maroon); background: #fff; border: 2px solid var(--text-maroon); border-radius: 30px; cursor: pointer; font-family: inherit; transition: 0.2s; box-shadow: 0 4px 10px rgba(94, 17, 21, 0.2); }
+        .btn-save { padding: 12px 25px; font-size: 18px; font-weight: 900; color: var(--text-maroon); background: #fff; border: 2px solid var(--text-maroon); border-radius: 30px; cursor: pointer; font-family: inherit; transition: 0.2s; box-shadow: 0 4px 10px rgba(94, 17, 21, 0.2); }
         .btn-save:hover { background: var(--text-maroon); color: #fff; transform: translateY(-3px); }
         .btn-back { position: absolute; top: -15px; left: 0; background: none; border: none; color: var(--text-maroon); font-family: inherit; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; opacity: 0.7; transition: 0.2s; }
         .btn-back:hover { opacity: 1; text-decoration: underline; }
@@ -128,12 +128,12 @@
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
             .control-group:last-child { border-bottom: none; }
             .crystal-section { grid-column: span 1; }
-            
             .preview-box { height: 320px; } #screen-result .preview-box { height: 400px; }
             h1 { font-size: 22px; margin-bottom: 15px; }
             .action-bar { flex-direction: column; gap: 15px; }
             .bg-controls { width: 100%; padding: 10px; }
-            .action-buttons { gap: 15px; width: 100%; justify-content: center; }
+            .action-buttons { gap: 10px; width: 100%; justify-content: center; }
+            .btn-save { padding: 10px 15px; font-size: 16px; }
         }
     </style>
 </head>
@@ -208,7 +208,6 @@
                 <div class="control-group">
                     <h3>Wings ปีก</h3>
                     <div class="color-group" style="flex-wrap: wrap;">
-                        <!-- ใช้ class color-radio เหมือนกันเพื่อให้โชว์ขอบสีชมพูเวลากด -->
                         <label><input type="radio" name="w-color" value="off" class="color-radio"><span class="shape-icon" style="width: 25px; height: 25px; font-size: 12px; border-radius: 5px; filter: grayscale(0%); opacity: 1;">❌</span></label>
                         <span style="font-size: 14px; margin: 0 5px; color:#ccc;">or</span>
                         <span class="color-text">colour</span>
@@ -221,8 +220,8 @@
                 <div class="control-group crystal-section">
                     <h3>Crystals คริสตัล</h3>
                     <div class="crystal-grid">
-                        <label class="circle-label"><input type="checkbox" id="chk-c1" class="radio-circle" onchange="updateWand()"><span class="circle-indicator"></span> Handle</label>
-                        <label class="circle-label"><input type="checkbox" id="chk-c2" class="radio-circle" onchange="updateWand()"><span class="circle-indicator"></span> Base</label>
+                        <label class="circle-label"><input type="checkbox" id="chk-c1" class="radio-circle" onchange="playSound('click'); updateWand()"><span class="circle-indicator"></span> Handle</label>
+                        <label class="circle-label"><input type="checkbox" id="chk-c2" class="radio-circle" onchange="playSound('click'); updateWand()"><span class="circle-indicator"></span> Base</label>
                         
                         <div style="width: 100%;">
                             <label class="circle-label crystal-dropdown-trigger"><input type="checkbox" id="chk-main-crystal" class="radio-circle" onchange="toggleCrystalMenu('main')"><span class="circle-indicator"></span> Main head ▼</label>
@@ -244,19 +243,15 @@
                     <img id="fan" src="assets/F0.png" class="layer hidden-down">
                     <img id="hand" src="" class="layer">
                     <img id="c1-crystal" src="assets/C1.png" class="layer crystal-layer">
-                    
                     <img id="base" src="" class="layer part-head">
                     <img id="wings" src="" class="layer part-head">
                     <img id="main-head" src="" class="layer part-head">
-                    
                     <img id="sub-head" src="" class="layer part-head">
                     <img id="c2-crystal" src="assets/C2.png" class="layer crystal-layer part-head">
-                    
                     <img id="c-main-1" src="" class="layer crystal-layer part-head">
                     <img id="c-main-3" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-2" src="" class="layer crystal-layer part-head">
                     <img id="c-sub-4" src="" class="layer crystal-layer part-head">
-
                     <canvas id="text-canvas" width="2048" height="2048" class="layer"></canvas>
                 </div>
             </div>
@@ -271,7 +266,6 @@
 
             <div class="action-bar">
                 
-                <!-- ย้ายปุ่ม ON/OFF พัดขึ้นมาไว้เหนือสุด -->
                 <div class="fan-section">
                     <p style="font-size: 16px; font-weight: bold; color: var(--pink-accent); margin: 0 0 10px 0; line-height: 1.4;">
                         อยากลองอะไรสนุก ๆ ไหม? ลองกดปุ่มนี้ดูสิ!<br>
@@ -284,7 +278,7 @@
                     <div style="font-size: 14px; font-style: italic; width: 100%; text-align: center; color: var(--pink-accent); margin-bottom: 5px;">Settings</div>
                     
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 5px;">
-                        <label class="transparent-label"><input type="checkbox" id="chk-show-text" checked onchange="updateTextPreview()"> ✨ ข้อความอวยพร</label>
+                        <label class="transparent-label"><input type="checkbox" id="chk-show-text" checked onchange="playSound('click'); updateTextPreview()"> ✨ ข้อความอวยพร</label>
                         <input type="color" id="text-color" class="bg-picker" value="#ff6b81" style="width:20px; height:20px;" onchange="updateTextPreview()" title="สีข้อความอวยพร">
                     </div>
                     <div style="display: flex; gap: 5px; align-items: center; width: 100%; justify-content: center; flex-wrap: wrap;">
@@ -306,14 +300,16 @@
                     </select>
                     <button class="btn-small" onclick="document.getElementById('bg-upload').click()">🖼️ อัปโหลด</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
-                    <label class="transparent-label"><input type="checkbox" id="chk-transparent" onchange="setBgMode('transparent')"> โปร่งใส</label>
+                    <label class="transparent-label"><input type="checkbox" id="chk-transparent" onchange="playSound('click'); setBgMode('transparent')"> โปร่งใส</label>
                     
                     <img id="uploaded-bg-img" style="display:none;">
                     <img id="preset-bg-img" src="assets/bgsave_2.jpg" style="display:none;">
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn-save" onclick="exportToImage()">SAVE</button>
+                    <button class="btn-save" id="btn-save" onclick="exportToImage()">SAVE PNG</button>
+                    <!-- ปุ่มบันทึกเป็น GIF เคลื่อนไหว -->
+                    <button class="btn-save" id="btn-save-gif" onclick="exportToGIF()" style="background: var(--pink-accent); color: white; border-color: var(--pink-accent);">SAVE GIF</button>
                 </div>
             </div>
         </div>
@@ -327,7 +323,7 @@
                 <p style="color: var(--text-maroon); font-size: 14px; margin-bottom: 15px; line-height: 1.5;">
                     หากภาพไม่ดาวน์โหลดอัตโนมัติ<br>ให้ <b>"แตะค้างที่รูปภาพด้านล่าง"</b> แล้วเลือกบันทึก ⬇️
                 </p>
-                <div style="max-height: 45vh; overflow-y: auto; border-radius: 15px; margin-bottom: 15px; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <div style="max-height: 45vh; overflow-y: auto; border-radius: 15px; margin-bottom: 15px; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: #fff;">
                     <img id="final-img-preview" src="" style="width: 100%; height: auto; display: block;">
                 </div>
                 <p style="font-size: 14px; color: var(--pink-accent); font-weight: bold; margin-top: 0px; margin-bottom: 15px;">ขอบพระคุณผู้วิเศษทุกท่านที่มาร่วมสนุก ✨</p>
@@ -357,17 +353,15 @@
 
         // --- ระบบเสียง (Sound System) ---
         function playSound(type) {
-            // ระบบจะพยายามเล่นเสียง ถ้าไฟล์ไม่มีก็จะไม่พังค่ะ
             const audio = new Audio(`assets/${type}.mp3`);
-            audio.play().catch(e => { /* ละทิ้ง Error กรณีเบราว์เซอร์บล็อกเสียงก่อนผู้ใช้กดจอ */ });
+            audio.play().catch(e => { console.log("Sound autoplay prevented."); });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // ดักการกดปุ่ม Radio เพื่อเล่นเสียง 'click'
-            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(radio => {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('mousedown', function() { this.dataset.isChecked = this.checked; });
                 radio.addEventListener('click', function() {
-                    playSound('click'); // เล่นเสียงคลิก
+                    playSound('click'); 
                     if (this.dataset.isChecked === 'true') { this.checked = false; this.dataset.isChecked = 'false'; } 
                     else { this.dataset.isChecked = 'true'; }
                     updateUI(); updateWand();
@@ -517,9 +511,9 @@
             }
         }
 
-        // --- ระบบแปลงร่าง & Error Check ก่อนส่ง ---
+        // --- ระบบ Error Check และ แปลงร่าง ---
         function triggerMagicEffect() {
-            // เช็คตัวบังคับ: Handle, Base, Mainhead ต้องถูกเลือก
+            // Error Check ชิ้นส่วนบังคับ
             const hVal = getRadio('h-color');
             const bVal = getRadio('b-color');
             const mShape = getRadio('m-shape');
@@ -530,8 +524,7 @@
                 return;
             }
 
-            // ถ้าผ่าน ให้เล่นเสียงเสกคาถาและแปลงร่าง
-            playSound('magic');
+            playSound('magic'); // เสียงเวทมนตร์ตอนกด YESSS
 
             const container = document.getElementById('sparkle-container');
             for(let i=0; i<30; i++) {
@@ -614,6 +607,7 @@
         function toggleFan() {
             if (isAnimating) return; isAnimating = true;
             const btn = document.getElementById('btn-fan-toggle'); const fan = document.getElementById('fan'); const headParts = document.querySelectorAll('.part-head'); 
+            
             if (!isFanOpen) {
                 playSound('fan_open'); // เสียงกางพัด
                 btn.innerHTML = "ON"; btn.classList.add('active'); fan.src = PATH + 'F0.png';
@@ -626,66 +620,162 @@
             }
         }
 
-        async function exportToImage() {
-            playSound('click');
-            const btn = document.querySelector('.btn-save'); btn.innerHTML = "Saving...";
-            
-            const canvas = document.createElement('canvas'); canvas.width = 2048; canvas.height = 2048;
-            const ctx = canvas.getContext('2d');
+        // ==========================================
+        // ฟังก์ชันช่วยวาด Canvas (ใช้ร่วมกันตอนเซฟ)
+        // ==========================================
+        function drawCurrentDOMToCanvas(ctx, scaleTo = 2048) {
+            ctx.clearRect(0, 0, scaleTo, scaleTo);
 
             if (currentBgMode !== 'transparent') {
                 if (currentBgMode === 'color') {
-                    ctx.fillStyle = document.getElementById('bg-color').value; ctx.fillRect(0, 0, 2048, 2048);
+                    ctx.fillStyle = document.getElementById('bg-color').value; ctx.fillRect(0, 0, scaleTo, scaleTo);
                 } else if (currentBgMode === 'preset') {
                     const presetImg = document.getElementById('preset-bg-img');
-                    if (presetImg.src && presetImg.src !== window.location.href) { ctx.drawImage(presetImg, 0, 0, 2048, 2048); }
+                    if (presetImg.src && presetImg.src !== window.location.href) { ctx.drawImage(presetImg, 0, 0, scaleTo, scaleTo); }
                 } else if (currentBgMode === 'upload') {
                     const uploadedImg = document.getElementById('uploaded-bg-img');
-                    if (uploadedImg.src && uploadedImg.src !== window.location.href) { ctx.drawImage(uploadedImg, 0, 0, 2048, 2048); }
+                    if (uploadedImg.src && uploadedImg.src !== window.location.href) { ctx.drawImage(uploadedImg, 0, 0, scaleTo, scaleTo); }
                 }
             }
 
-            const drawImg = (id) => {
-                return new Promise((resolve) => {
-                    const imgEl = document.getElementById(id);
-                    if (!imgEl || imgEl.style.display === 'none' || !imgEl.src || imgEl.src.endsWith('none.png') || imgEl.classList.contains('hidden-down')) { resolve(); return; }
-                    const img = new Image(); img.crossOrigin = "anonymous";
-                    img.onload = () => { 
-                        let offsetY = imgEl.classList.contains('move-down') ? 500 : 0; 
-                        if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { const extraY = parseInt(document.getElementById('sub-head-y').value) || 0; offsetY += extraY; }
-                        
-                        if (id === 'fan') { ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)'; } else { ctx.filter = 'none'; }
-                        ctx.drawImage(img, 0, offsetY, 2048, 2048); ctx.filter = 'none'; resolve(); 
-                    };
-                    img.onerror = resolve; img.src = imgEl.src;
-                });
-            };
+            ctx.save();
+            ctx.scale(scaleTo / 2048, scaleTo / 2048);
 
-            await drawImg('fan'); await drawImg('hand'); await drawImg('base');
-            await drawImg('wings'); await drawImg('main-head'); await drawImg('sub-head');
-            await drawImg('c1-crystal'); await drawImg('c2-crystal');
-            await drawImg('c-main-1'); await drawImg('c-main-3'); await drawImg('c-sub-2'); await drawImg('c-sub-4');
-
-            if (document.getElementById('chk-show-text').checked) {
-                ctx.drawImage(document.getElementById('text-canvas'), 0, 0);
+            // คำนวณแกน Y ปัจจุบันจากการทำ CSS Animation
+            const headEl = document.getElementById('main-head');
+            const headStyle = window.getComputedStyle(headEl);
+            let headOffsetY = 0;
+            if (headStyle.transform && headStyle.transform !== 'none') {
+                headOffsetY = new DOMMatrix(headStyle.transform).m42;
             }
+
+            const fanEl = document.getElementById('fan');
+            const fanStyle = window.getComputedStyle(fanEl);
+            let fanOffsetY = 0;
+            if (fanStyle.transform && fanStyle.transform !== 'none') {
+                fanOffsetY = new DOMMatrix(fanStyle.transform).m42;
+            }
+
+            function draw(id, offsetY) {
+                const el = document.getElementById(id);
+                if (el && el.style.display !== 'none' && el.src && !el.src.endsWith('none.png')) {
+                    const op = parseFloat(window.getComputedStyle(el).opacity);
+                    if (op > 0.01) {
+                        if (id === 'fan') ctx.filter = `brightness(155%) grayscale(115%) contrast(90%) opacity(${op})`;
+                        else ctx.filter = `opacity(${op})`;
+
+                        let finalY = offsetY;
+                        if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
+                        
+                        ctx.drawImage(el, 0, finalY, 2048, 2048);
+                        ctx.filter = 'none'; 
+                    }
+                }
+            }
+
+            draw('fan', fanOffsetY); draw('hand', 0); draw('base', headOffsetY);
+            draw('wings', headOffsetY); draw('main-head', headOffsetY); draw('sub-head', headOffsetY);
+            draw('c1-crystal', 0); draw('c2-crystal', headOffsetY);
+            draw('c-main-1', headOffsetY); draw('c-main-3', headOffsetY); draw('c-sub-2', headOffsetY); draw('c-sub-4', headOffsetY);
+
+            if (document.getElementById('chk-show-text').checked) { ctx.drawImage(document.getElementById('text-canvas'), 0, 0); }
 
             ctx.font = "italic 36px 'Mali', sans-serif"; ctx.fillStyle = "#5e1115"; ctx.textAlign = "right";
             ctx.lineWidth = 5; ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-            ctx.strokeText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
-            ctx.fillText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
+            ctx.strokeText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000); ctx.fillText("webdesign by emanonmui IG:ium_kamonwan", 2000, 2000);
+
+            ctx.restore();
+        }
+
+        // --- 1. บันทึกเป็นภาพนิ่ง PNG ---
+        function exportToImage() {
+            playSound('click');
+            const btn = document.getElementById('btn-save'); btn.innerHTML = "Saving...";
+            
+            const canvas = document.createElement('canvas'); canvas.width = 2048; canvas.height = 2048;
+            const ctx = canvas.getContext('2d');
+            
+            drawCurrentDOMToCanvas(ctx, 2048);
 
             canvas.toBlob(function(blob) {
                 const url = URL.createObjectURL(blob);
                 document.getElementById('final-img-preview').src = url;
                 document.getElementById('save-modal').style.display = 'flex';
                 
-                const link = document.createElement('a');
-                link.style.display = 'none'; link.href = url; link.download = 'MyMagicWand.png';
+                const link = document.createElement('a'); link.style.display = 'none'; link.href = url; link.download = 'MyMagicWand.png';
                 document.body.appendChild(link); link.click();
-                
-                setTimeout(() => { document.body.removeChild(link); btn.innerHTML = "SAVE"; }, 100);
+                setTimeout(() => { document.body.removeChild(link); btn.innerHTML = "SAVE PNG"; }, 100);
             }, 'image/png');
+        }
+
+        // --- 2. บันทึกเป็นภาพเคลื่อนไหว GIF ---
+        async function exportToGIF() {
+            playSound('click');
+            const btn = document.getElementById('btn-save-gif');
+            btn.innerHTML = "Recording... ⏳";
+            btn.disabled = true; document.getElementById('btn-save').disabled = true;
+
+            try {
+                // โหลด Worker เพื่อประมวลผล GIF แบบไม่ติด CORS
+                const res = await fetch('https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js');
+                const text = await res.text();
+                const workerUrl = URL.createObjectURL(new Blob([text], {type: 'application/javascript'}));
+
+                // สร้างตัวเข้ารหัส GIF (ปรับขนาดเป็น 1024x1024 เพื่อกันเบราว์เซอร์เด้งหลุด)
+                const gif = new GIF({ workers: 2, quality: 10, width: 1024, height: 1024, workerScript: workerUrl });
+                const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 1024;
+                const ctx = canvas.getContext('2d');
+
+                const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+                // 1. ถ้าพัดกางอยู่ บังคับให้ปิดก่อนเริ่มถ่าย
+                if (isFanOpen) { toggleFan(); await sleep(1800); }
+
+                // 2. ถ่ายเฟรมที่ 1 (ตอนปิดค้างไว้ 1 วินาที)
+                drawCurrentDOMToCanvas(ctx, 1024);
+                gif.addFrame(ctx, {copy: true, delay: 1000});
+
+                // 3. เริ่มกางพัดและทยอยถ่ายรูปทีละเฟรม
+                toggleFan();
+                for(let i=0; i<30; i++) { // 30 เฟรม * 60ms = 1800ms
+                    await sleep(60);
+                    drawCurrentDOMToCanvas(ctx, 1024);
+                    gif.addFrame(ctx, {copy: true, delay: 60});
+                }
+
+                // 4. ถ่ายเฟรมตอนเปิดค้างไว้ 1 วินาที
+                drawCurrentDOMToCanvas(ctx, 1024);
+                gif.addFrame(ctx, {copy: true, delay: 1000});
+
+                // 5. เริ่มหุบพัดและทยอยถ่ายรูป
+                toggleFan();
+                for(let i=0; i<30; i++) {
+                    await sleep(60);
+                    drawCurrentDOMToCanvas(ctx, 1024);
+                    gif.addFrame(ctx, {copy: true, delay: 60});
+                }
+
+                btn.innerHTML = "Encoding... ⚙️";
+                
+                gif.on('finished', function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById('final-img-preview').src = url;
+                    document.getElementById('save-modal').style.display = 'flex';
+                    
+                    const link = document.createElement('a'); link.style.display = 'none'; link.href = url; link.download = 'MyMagicWand.gif';
+                    document.body.appendChild(link); link.click();
+                    setTimeout(() => { document.body.removeChild(link); }, 100);
+
+                    btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
+                });
+
+                gif.render();
+
+            } catch (error) {
+                console.error(error);
+                alert("เกิดข้อผิดพลาดในการบันทึก GIF แนะนำให้ลองเปิดในเบราว์เซอร์ Chrome หรือ Safari ค่ะ");
+                btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
+            }
         }
 
     </script>
