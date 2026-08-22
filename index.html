@@ -142,7 +142,7 @@
         .save-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
         .save-modal-content { background: var(--bg-cream); padding: 20px; border-radius: 20px; text-align: center; width: 100%; max-width: 450px; border: 3px solid #ffccd5; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
-                /* ========================================= */
+                        /* ========================================= */
         /* CSS โหมด Mobile-Friendly (หน้าจอมือถือ) */
         /* ========================================= */
         @media (max-width: 768px) {
@@ -151,22 +151,52 @@
             /* ปลด overflow เพื่อให้กล่องพรีวิวยึดติดจอ (Sticky) ทำงานได้ */
             .app-container { overflow: visible !important; padding-top: 10px; }
 
+            /* --- แทรกโค้ดปรับข้อความเชิญชวนตรงนี้ได้เลยค่ะ --- */
+            .fun-text {
+                font-size: 14px !important; /* ปรับขนาดตัวอักษรภาษาไทยให้เล็กลง */
+                line-height: 1.8 !important; /* ขยายความห่างระหว่างบรรทัดให้โปร่งขึ้น */
+            }
+            .fun-subtext {
+                font-size: 12px !important; /* ปรับขนาดตัวอักษรภาษาอังกฤษให้เล็กลงตาม */
+            }
+            /* ------------------------------------------- */
+
             /* --- แก้ปัญหา 2 หน้าซ้อนกัน: ใช้ Flex เฉพาะหน้าที่ถูกเลือก --- */
             #screen-builder:not([style*="display: none"]) {
                 display: flex !important; 
                 flex-direction: column; 
             }
+            
             #screen-result[style*="display: block"] {
                 display: flex !important; 
                 flex-direction: column; 
             }
 
             /* --- จัดเลย์เอาต์หน้า 1 (Builder) ดึงพรีวิวมาด้านบน --- */
-            #screen-builder h1 { order: 1; font-size: 22px; margin-bottom: 10px; }
-            #screen-builder .preview-box { 
-                order: 2; /* ย้ายพรีวิวมาอยู่ใต้หัวข้อ */
+                        /* --- จัดให้ทั้งหัวข้อและกล่องพรีวิวติดหนึบ (Sticky) --- */
+            #screen-builder h1 { 
+                order: 1; 
+                font-size: 22px; 
+                margin-top: 0;
+                margin-bottom: 10px; 
+                padding: 10px 0;
                 position: sticky; 
-                top: 5px; /* ยึดติดขอบจอบน */
+                top: 0; /* ให้หัวข้อติดขอบบนสุด */
+                z-index: 105; /* ให้อยู่เลเยอร์บนสุด */
+                background: rgba(255, 255, 255, 0.6); /* พื้นหลังใสๆ เบลอๆ ป้องกันข้อความซ้อนทับกันตอนเลื่อน */
+                backdrop-filter: blur(5px);
+                border-radius: 15px;
+            }
+            #screen-builder .preview-box { 
+                order: 2; 
+                position: sticky; 
+                top: 60px; /* ขยับกล่องพรีวิวลงมาหลบหัวข้อด้านบน (กะไว้ประมาณ 60px) */
+                z-index: 100; 
+                box-shadow: 0 15px 25px rgba(0,0,0,0.2); 
+                margin-bottom: 25px; 
+                height: 340px; 
+            }
+ /* ยึดติดขอบจอบน */
                 z-index: 100; /* ให้อยู่เลเยอร์บนสุดเพื่อทับตัวเลือกที่เลื่อนผ่าน */
                 box-shadow: 0 15px 25px rgba(0,0,0,0.2); /* เพิ่มเงาฟุ้งๆ ให้รู้ว่าลอยอยู่ */
                 margin-bottom: 25px; 
