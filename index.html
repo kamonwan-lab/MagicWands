@@ -935,8 +935,9 @@
 
                 if (isFanOpen) { toggleFan(); await sleep(1800); }
 
+                // หุบพัดค้างไว้ 0.2 วิ (200ms)
                 drawCurrentDOMToCanvas(ctx, 1024);
-                gif.addFrame(ctx, {copy: true, delay: 1000});
+                gif.addFrame(ctx, {copy: true, delay: 200});
 
                 toggleFan();
                 for(let i=0; i<30; i++) { 
@@ -945,8 +946,9 @@
                     gif.addFrame(ctx, {copy: true, delay: 60});
                 }
 
+                // กางสุดค้างไว้ 0.5 วิ (500ms)
                 drawCurrentDOMToCanvas(ctx, 1024);
-                gif.addFrame(ctx, {copy: true, delay: 1000});
+                gif.addFrame(ctx, {copy: true, delay: 500});
 
                 toggleFan();
                 for(let i=0; i<30; i++) {
