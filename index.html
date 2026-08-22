@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make your own Magic Wand!</title>
-    
-    <!-- ไลบรารีสำหรับประมวลผลไฟล์ GIF -->
     <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
 
     <style>
@@ -128,12 +126,12 @@
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
             .control-group:last-child { border-bottom: none; }
             .crystal-section { grid-column: span 1; }
-            
             .preview-box { height: 320px; } #screen-result .preview-box { height: 400px; }
             h1 { font-size: 22px; margin-bottom: 15px; }
             .action-bar { flex-direction: column; gap: 15px; }
             .bg-controls { width: 100%; padding: 10px; }
-            .action-buttons { gap: 15px; width: 100%; justify-content: center; }
+            .action-buttons { gap: 10px; width: 100%; justify-content: center; }
+            .btn-save { padding: 10px 15px; font-size: 16px; }
         }
     </style>
 </head>
@@ -337,7 +335,10 @@
         const greetingsList = [
             "✨May your life be magical!✨",
             "✨Balachoo Bachoo!✨",
-            "✨Le poof! all bad things are gone!✨"
+            "✨Le poof! all bad things are gone!✨",
+            "✨Bibbidi-Bobbidi-Boo✨",
+            "✨Simsalabim✨",
+            "✨โอม มะลึกกึ๊กกึ๋ยย์✨"
         ];
         
         const getRadio = (name) => {
@@ -505,14 +506,14 @@
             }
         }
 
-        // --- ระบบ Error Check และ แปลงร่าง ---
+        // --- ระบบแปลงร่าง & Error Check ก่อนส่ง ---
         function triggerMagicEffect() {
+            // เช็คตัวบังคับ: Handle, Base, Mainhead ต้องถูกเลือกครบทั้งรูปทรงและสี
             const hVal = getRadio('h-color');
             const bVal = getRadio('b-color');
             const mShape = getRadio('m-shape');
             const mColor = getRadio('m-color');
 
-            // แจ้งเตือนเมื่อลืมเลือกชิ้นส่วนพื้นฐาน
             if (hVal === 'none' || bVal === 'none' || mShape === 'none' || mColor === 'none') {
                 alert("อ๊ะ เดี๋ยวก่อน เหมือนว่าคฑาจะยังไม่เสร็จนะ\nOops! Please select all the basic elements (Handle, Base, Main head)");
                 return;
@@ -615,7 +616,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันช่วยวาด Canvas 
+        // ฟังก์ชันช่วยวาด Canvas (แก้ปัญหา iOS สีดรอปด้วยการถมขาวแทน Filter)
         // ==========================================
         function drawCurrentDOMToCanvas(ctx, scaleTo = 2048) {
             ctx.clearRect(0, 0, scaleTo, scaleTo);
@@ -655,16 +656,30 @@
                     const op = parseFloat(window.getComputedStyle(el).opacity);
                     if (op > 0.01) {
                         ctx.globalAlpha = op; 
-                        
-                        if (id === 'fan') ctx.filter = `brightness(155%) grayscale(115%) contrast(90%)`;
-                        else ctx.filter = `none`;
 
                         let finalY = offsetY;
                         if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
                         
-                        ctx.drawImage(el, 0, finalY, 2048, 2048);
-                        ctx.filter = 'none'; 
-                        ctx.globalAlpha = 1.0;
+                        if (id === 'fan') {
+                            // วิธีแก้ปัญหา iOS: ใช้ Canvas จำลองสร้างสีขาวทับแทนการใช้ ctx.filter โดยตรง
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = 2048; 
+                            tempCanvas.height = 2048;
+                            const tCtx = tempCanvas.getContext('2d');
+                            
+                            tCtx.drawImage(el, 0, finalY, 2048, 2048);
+                            
+                            // ถมสีขาวแบบบางๆ ลงเฉพาะส่วนที่มีใบพัด เพื่อให้ภาพดูสว่างขึ้น (จำลอง Brightness)
+                            tCtx.globalCompositeOperation = 'source-atop';
+                            tCtx.fillStyle = 'rgba(255, 255, 255, 0.45)'; 
+                            tCtx.fillRect(0, 0, 2048, 2048);
+                            
+                            ctx.drawImage(tempCanvas, 0, 0, 2048, 2048);
+                        } else {
+                            ctx.drawImage(el, 0, finalY, 2048, 2048);
+                        }
+                        
+                        ctx.globalAlpha = 1.0; 
                     }
                 }
             }
@@ -683,6 +698,7 @@
             ctx.restore();
         }
 
+        // --- บันทึก PNG ---
         function exportToImage() {
             playSound('click');
             const btn = document.getElementById('btn-save'); btn.innerHTML = "Saving...";
@@ -703,6 +719,7 @@
             }, 'image/png');
         }
 
+        // --- บันทึก GIF ---
         async function exportToGIF() {
             playSound('click');
             const btn = document.getElementById('btn-save-gif');
@@ -714,7 +731,7 @@
                 const text = await res.text();
                 const workerUrl = URL.createObjectURL(new Blob([text], {type: 'application/javascript'}));
 
-                const gif = new GIF({ workers: 2, quality: 2, width: 1024, height: 1024, workerScript: workerUrl });
+                const gif = new GIF({ workers: 2, quality: 5, width: 1024, height: 1024, workerScript: workerUrl });
                 const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 1024;
                 const ctx = canvas.getContext('2d');
 
