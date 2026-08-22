@@ -912,6 +912,7 @@
             }, 'image/png');
         }
 
+        
         // --- บันทึก GIF ---
         async function exportToGIF() {
             playSound('click');
@@ -920,7 +921,7 @@
             
             btn.innerHTML = "Recording... ⏳";
             btn.disabled = true; document.getElementById('btn-save').disabled = true;
-            warningText.style.display = 'block';
+            if(warningText) warningText.style.display = 'block';
 
             try {
                 const res = await fetch('https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js');
@@ -940,10 +941,17 @@
                 gif.addFrame(ctx, {copy: true, delay: 200});
 
                 toggleFan();
+                // เริ่มกางพัด (หักลบเวลาที่ใช้แคปภาพ เพื่อไม่ให้เฟรมดีเลย์และกระตุก)
                 for(let i=0; i<30; i++) { 
-                    await sleep(60);
+                    let timeStart = Date.now();
+                    
                     drawCurrentDOMToCanvas(ctx, 1024);
                     gif.addFrame(ctx, {copy: true, delay: 60});
+                    
+                    let timeTaken = Date.now() - timeStart;
+                    let diff = 60 - timeTaken;
+                    // ถ้าระบบแคปไว ให้รอเวลาที่เหลือ แต่ถ้าแคปช้า ให้รออย่างน้อย 5ms เพื่อให้ภาพขยับต่อ
+                    await sleep(diff > 5 ? diff : 5); 
                 }
 
                 // กางสุดค้างไว้ 0.5 วิ (500ms)
@@ -951,10 +959,16 @@
                 gif.addFrame(ctx, {copy: true, delay: 500});
 
                 toggleFan();
+                // เริ่มหุบพัด (หักลบเวลาแคปภาพเช่นกัน)
                 for(let i=0; i<30; i++) {
-                    await sleep(60);
+                    let timeStart = Date.now();
+                    
                     drawCurrentDOMToCanvas(ctx, 1024);
                     gif.addFrame(ctx, {copy: true, delay: 60});
+                    
+                    let timeTaken = Date.now() - timeStart;
+                    let diff = 60 - timeTaken;
+                    await sleep(diff > 5 ? diff : 5);
                 }
 
                 btn.innerHTML = "Encoding... ⚙️";
@@ -969,7 +983,7 @@
                     setTimeout(() => { document.body.removeChild(link); }, 100);
 
                     btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
-                    warningText.style.display = 'none';
+                    if(warningText) warningText.style.display = 'none';
                 });
 
                 gif.render();
@@ -978,7 +992,7 @@
                 console.error(error);
                 alert("เกิดข้อผิดพลาดในการบันทึก GIF แนะนำให้ลองเปิดในเบราว์เซอร์ Chrome หรือ Safari ค่ะ");
                 btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
-                warningText.style.display = 'none';
+                if(warningText) warningText.style.display = 'none';
             }
         }
 
