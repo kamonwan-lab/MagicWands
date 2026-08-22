@@ -142,45 +142,54 @@
         .save-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
         .save-modal-content { background: var(--bg-cream); padding: 20px; border-radius: 20px; text-align: center; width: 100%; max-width: 450px; border: 3px solid #ffccd5; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
-        /* ========================================= */
+                /* ========================================= */
         /* CSS โหมด Mobile-Friendly (หน้าจอมือถือ) */
         /* ========================================= */
         @media (max-width: 768px) {
             body { background: url('assets/page_bg_phone.jpg') center top/cover no-repeat fixed; }
             
-            /* สำคัญมาก: ปลด overflow เพื่อให้ Sticky ทำงานได้ในมือถือ */
+            /* ปลด overflow เพื่อให้กล่องพรีวิวยึดติดจอ (Sticky) ทำงานได้ */
             .app-container { overflow: visible !important; padding-top: 10px; }
 
-            /* --- จัดเลย์เอาต์หน้า 1 (Builder) ใหม่ --- */
-            #screen-builder { display: flex; flex-direction: column; }
+            /* --- แก้ปัญหา 2 หน้าซ้อนกัน: ใช้ Flex เฉพาะหน้าที่ถูกเลือก --- */
+            #screen-builder:not([style*="display: none"]) {
+                display: flex !important; 
+                flex-direction: column; 
+            }
+            #screen-result[style*="display: block"] {
+                display: flex !important; 
+                flex-direction: column; 
+            }
+
+            /* --- จัดเลย์เอาต์หน้า 1 (Builder) ดึงพรีวิวมาด้านบน --- */
             #screen-builder h1 { order: 1; font-size: 22px; margin-bottom: 10px; }
             #screen-builder .preview-box { 
                 order: 2; /* ย้ายพรีวิวมาอยู่ใต้หัวข้อ */
                 position: sticky; 
-                top: 10px; /* ยึดติดขอบจอบน */
-                z-index: 100; /* ให้อยู่เลเยอร์บนสุดทับสิ่งอื่น */
-                box-shadow: 0 15px 25px rgba(0,0,0,0.15); /* ใส่เงาให้ดูเด่นขึ้นมา */
-                margin-bottom: 20px; 
+                top: 5px; /* ยึดติดขอบจอบน */
+                z-index: 100; /* ให้อยู่เลเยอร์บนสุดเพื่อทับตัวเลือกที่เลื่อนผ่าน */
+                box-shadow: 0 15px 25px rgba(0,0,0,0.2); /* เพิ่มเงาฟุ้งๆ ให้รู้ว่าลอยอยู่ */
+                margin-bottom: 25px; 
                 height: 340px; 
             }
             #screen-builder .controls-grid { order: 3; grid-template-columns: 1fr; gap: 20px; }
-            #screen-builder .submit-section { order: 4; margin-bottom: 50px; }
+            #screen-builder > div:nth-child(3) { order: 4; } /* กล่องตั้งค่าข้อความอวยพร */
+            #screen-builder .submit-section { order: 5; margin-bottom: 50px; }
 
-            /* --- จัดเลย์เอาต์หน้า 2 (Result) ใหม่ --- */
-            #screen-result { display: flex; flex-direction: column; }
+            /* --- จัดเลย์เอาต์หน้า 2 (Result) ดึงพรีวิวมาด้านบน --- */
             #screen-result .btn-back { order: 1; position: relative; top: 0; margin-bottom: 10px; }
             #screen-result h1 { order: 2; font-size: 22px; margin-top: 0; margin-bottom: 15px; }
             #screen-result .preview-box { 
                 order: 3; 
                 position: sticky; 
-                top: 10px; 
+                top: 5px; 
                 z-index: 100; 
-                box-shadow: 0 15px 25px rgba(0,0,0,0.15); 
-                margin-bottom: 20px; 
+                box-shadow: 0 15px 25px rgba(0,0,0,0.2); 
+                margin-bottom: 25px; 
                 height: 380px; 
             }
             #screen-result .action-bar { order: 4; }
-            #screen-result > div:last-child { order: 5; margin-bottom: 30px; } /* เครดิต */
+            #screen-result > div:last-child { order: 5; margin-bottom: 30px; } /* ข้อความเครดิต */
 
             /* การตั้งค่าย่อยอื่นๆ ในมือถือ */
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
@@ -206,6 +215,7 @@
             <div class="controls-grid">
                 
                 <div class="control-group">
+                    <h3>Start</h3>
                     <h3>Handle ด้าม</h3>
                     <div class="color-group">
                         <span class="color-text">colour</span>
