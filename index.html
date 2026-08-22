@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make your own Magic Wand!</title>
     
-    <!-- นำเข้าไลบรารีสำหรับประมวลผลไฟล์ GIF บนเบราว์เซอร์ -->
+    <!-- ไลบรารีสำหรับประมวลผลไฟล์ GIF -->
     <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
 
     <style>
@@ -128,12 +128,12 @@
             .control-group { border-bottom: 1px dashed #ffe4e1; padding-bottom: 15px; }
             .control-group:last-child { border-bottom: none; }
             .crystal-section { grid-column: span 1; }
+            
             .preview-box { height: 320px; } #screen-result .preview-box { height: 400px; }
             h1 { font-size: 22px; margin-bottom: 15px; }
             .action-bar { flex-direction: column; gap: 15px; }
             .bg-controls { width: 100%; padding: 10px; }
-            .action-buttons { gap: 10px; width: 100%; justify-content: center; }
-            .btn-save { padding: 10px 15px; font-size: 16px; }
+            .action-buttons { gap: 15px; width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -308,7 +308,6 @@
 
                 <div class="action-buttons">
                     <button class="btn-save" id="btn-save" onclick="exportToImage()">SAVE PNG</button>
-                    <!-- ปุ่มบันทึกเป็น GIF เคลื่อนไหว -->
                     <button class="btn-save" id="btn-save-gif" onclick="exportToGIF()" style="background: var(--pink-accent); color: white; border-color: var(--pink-accent);">SAVE GIF</button>
                 </div>
             </div>
@@ -335,11 +334,6 @@
 
     <script>
         const PATH = 'assets/';
-        
-        // -------------------------------------------------------------
-        // หากต้องการเพิ่มข้อความสุ่ม ให้พิมพ์เพิ่มในวงเล็บ [ ] นี้ได้เลยค่ะ
-        // อย่าลืมใส่ลูกน้ำ (,) คั่นระหว่างประโยคด้วยนะคะ
-        // -------------------------------------------------------------
         const greetingsList = [
             "✨May your life be magical!✨",
             "✨Balachoo Bachoo!✨",
@@ -358,7 +352,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(radio => {
                 radio.addEventListener('mousedown', function() { this.dataset.isChecked = this.checked; });
                 radio.addEventListener('click', function() {
                     playSound('click'); 
@@ -513,12 +507,12 @@
 
         // --- ระบบ Error Check และ แปลงร่าง ---
         function triggerMagicEffect() {
-            // Error Check ชิ้นส่วนบังคับ
             const hVal = getRadio('h-color');
             const bVal = getRadio('b-color');
             const mShape = getRadio('m-shape');
             const mColor = getRadio('m-color');
 
+            // แจ้งเตือนเมื่อลืมเลือกชิ้นส่วนพื้นฐาน
             if (hVal === 'none' || bVal === 'none' || mShape === 'none' || mColor === 'none') {
                 alert("อ๊ะ เดี๋ยวก่อน เหมือนว่าคฑาจะยังไม่เสร็จนะ\nOops! Please select all the basic elements (Handle, Base, Main head)");
                 return;
@@ -621,7 +615,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันช่วยวาด Canvas (ใช้ร่วมกันตอนเซฟ)
+        // ฟังก์ชันช่วยวาด Canvas 
         // ==========================================
         function drawCurrentDOMToCanvas(ctx, scaleTo = 2048) {
             ctx.clearRect(0, 0, scaleTo, scaleTo);
@@ -641,7 +635,6 @@
             ctx.save();
             ctx.scale(scaleTo / 2048, scaleTo / 2048);
 
-            // คำนวณแกน Y ปัจจุบันจากการทำ CSS Animation
             const headEl = document.getElementById('main-head');
             const headStyle = window.getComputedStyle(headEl);
             let headOffsetY = 0;
@@ -661,14 +654,17 @@
                 if (el && el.style.display !== 'none' && el.src && !el.src.endsWith('none.png')) {
                     const op = parseFloat(window.getComputedStyle(el).opacity);
                     if (op > 0.01) {
-                        if (id === 'fan') ctx.filter = `brightness(155%) grayscale(115%) contrast(90%) opacity(${op})`;
-                        else ctx.filter = `opacity(${op})`;
+                        ctx.globalAlpha = op; 
+                        
+                        if (id === 'fan') ctx.filter = `brightness(155%) grayscale(115%) contrast(90%)`;
+                        else ctx.filter = `none`;
 
                         let finalY = offsetY;
                         if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
                         
                         ctx.drawImage(el, 0, finalY, 2048, 2048);
                         ctx.filter = 'none'; 
+                        ctx.globalAlpha = 1.0;
                     }
                 }
             }
@@ -687,7 +683,6 @@
             ctx.restore();
         }
 
-        // --- 1. บันทึกเป็นภาพนิ่ง PNG ---
         function exportToImage() {
             playSound('click');
             const btn = document.getElementById('btn-save'); btn.innerHTML = "Saving...";
@@ -708,7 +703,6 @@
             }, 'image/png');
         }
 
-        // --- 2. บันทึกเป็นภาพเคลื่อนไหว GIF ---
         async function exportToGIF() {
             playSound('click');
             const btn = document.getElementById('btn-save-gif');
@@ -716,38 +710,31 @@
             btn.disabled = true; document.getElementById('btn-save').disabled = true;
 
             try {
-                // โหลด Worker เพื่อประมวลผล GIF แบบไม่ติด CORS
                 const res = await fetch('https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js');
                 const text = await res.text();
                 const workerUrl = URL.createObjectURL(new Blob([text], {type: 'application/javascript'}));
 
-                // สร้างตัวเข้ารหัส GIF (ปรับขนาดเป็น 1024x1024 เพื่อกันเบราว์เซอร์เด้งหลุด)
-                const gif = new GIF({ workers: 2, quality: 10, width: 1024, height: 1024, workerScript: workerUrl });
+                const gif = new GIF({ workers: 2, quality: 2, width: 1024, height: 1024, workerScript: workerUrl });
                 const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 1024;
                 const ctx = canvas.getContext('2d');
 
                 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-                // 1. ถ้าพัดกางอยู่ บังคับให้ปิดก่อนเริ่มถ่าย
                 if (isFanOpen) { toggleFan(); await sleep(1800); }
 
-                // 2. ถ่ายเฟรมที่ 1 (ตอนปิดค้างไว้ 1 วินาที)
                 drawCurrentDOMToCanvas(ctx, 1024);
                 gif.addFrame(ctx, {copy: true, delay: 1000});
 
-                // 3. เริ่มกางพัดและทยอยถ่ายรูปทีละเฟรม
                 toggleFan();
-                for(let i=0; i<30; i++) { // 30 เฟรม * 60ms = 1800ms
+                for(let i=0; i<30; i++) { 
                     await sleep(60);
                     drawCurrentDOMToCanvas(ctx, 1024);
                     gif.addFrame(ctx, {copy: true, delay: 60});
                 }
 
-                // 4. ถ่ายเฟรมตอนเปิดค้างไว้ 1 วินาที
                 drawCurrentDOMToCanvas(ctx, 1024);
                 gif.addFrame(ctx, {copy: true, delay: 1000});
 
-                // 5. เริ่มหุบพัดและทยอยถ่ายรูป
                 toggleFan();
                 for(let i=0; i<30; i++) {
                     await sleep(60);
