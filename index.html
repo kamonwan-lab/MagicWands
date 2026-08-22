@@ -806,25 +806,72 @@
             }
         }
 
-        let isFanOpen = false; let isAnimating = false; const gifDuration = 1200;
-        function toggleFan() {
-            if (isAnimating) return; isAnimating = true;
-            const btn = document.getElementById('btn-fan-toggle'); const fan = document.getElementById('fan'); const headParts = document.querySelectorAll('.part-head'); 
+                let isFanOpen = false; 
+        let isAnimating = false; 
+        
+        // --- ระบบปุ่มพรีวิว (เลื่อนให้เสร็จก่อน ค่อยกาง / หุบให้เสร็จก่อน ค่อยเลื่อนกลับ) ---
+        async function toggleFan() {
+            if (isAnimating) return; 
+            isAnimating = true;
             
+            const btn = document.getElementById('btn-fan-toggle'); 
+            const fan = document.getElementById('fan'); 
+            const headParts = document.querySelectorAll('.part-head'); 
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            
+            // ชุดภาพทั้ง 16 เฟรม
+            const fanSequence = [
+                'F0.png', 'F0_1.png', 'F0_2.png', 'F0_3.png', 'F0_4.png', 'F0_5.png',
+                'F0_5_5.png', 'F0_6.png', 'F0_6_5.png', 'F0_7.png', 'F0_7_5.png',
+                'F0_8.png', 'F0_8_5.png', 'F0_9.png', 'F0_9_5.png', 'F1.png'
+            ];
+
             if (!isFanOpen) {
-                playSound('fan_open'); // เสียงกางพัด
-                btn.innerHTML = "ON"; btn.classList.add('active'); fan.src = PATH + 'F0.png';
-                headParts.forEach(el => el.classList.add('move-down')); fan.classList.remove('hidden-down'); fan.classList.add('show-up');
-                setTimeout(() => { fan.src = PATH + 'F_animate.gif?' + Date.now(); setTimeout(() => { fan.src = PATH + 'F1.png'; isFanOpen = true; isAnimating = false; }, gifDuration); }, 600);
+                playSound('fan_open'); 
+                btn.innerHTML = "ON"; btn.classList.add('active'); 
+                
+                // สเต็ป 1: ให้ใบพัด F0 (แบบหุบ) โผล่ขึ้นมา พร้อมกับหัวคฑาที่เลื่อนลง
+                fan.src = PATH + fanSequence[0];
+                headParts.forEach(el => el.classList.add('move-down')); 
+                fan.classList.remove('hidden-down'); 
+                fan.classList.add('show-up');
+                
+                // รอให้ชิ้นส่วนเลื่อนลงมาจนสุดก่อน (ตาม CSS คือ 0.6 วิ)
+                await sleep(600);
+                
+                // สเต็ป 2: เมื่อจอดสนิทแล้ว ค่อยๆ กางใบพัดออก (ใช้เวลา ~0.6 วิ)
+                for(let i=1; i<=15; i++) {
+                    fan.src = PATH + fanSequence[i];
+                    await sleep(40); 
+                }
+                
+                isFanOpen = true; 
+                isAnimating = false;
             } else {
-                playSound('fan_close'); // เสียงหุบพัด
-                btn.innerHTML = "OFF"; btn.classList.remove('active'); fan.src = PATH + 'F_animate_in.gif?' + Date.now();
-                setTimeout(() => { fan.src = PATH + 'F0.png'; headParts.forEach(el => el.classList.remove('move-down')); fan.classList.remove('show-up'); fan.classList.add('hidden-down'); setTimeout(() => { isFanOpen = false; isAnimating = false; }, 600); }, gifDuration);
+                playSound('fan_close');
+                btn.innerHTML = "OFF"; btn.classList.remove('active'); 
+                
+                // สเต็ป 1: ค่อยๆ หุบใบพัดกลับเป็น F0 ให้เสร็จก่อน (ใช้เวลา ~0.6 วิ)
+                for(let i=14; i>=0; i--) {
+                    fan.src = PATH + fanSequence[i];
+                    await sleep(40);
+                }
+                
+                // สเต็ป 2: เมื่อหุบสุดแล้ว ให้ดึงหัวคฑาขึ้น และซ่อนใบพัดกลับลงไป
+                headParts.forEach(el => el.classList.remove('move-down')); 
+                fan.classList.remove('show-up'); 
+                fan.classList.add('hidden-down'); 
+                
+                // รอให้ชิ้นส่วนเลื่อนกลับเข้าที่ (ตาม CSS คือ 0.6 วิ)
+                await sleep(600);
+                
+                isFanOpen = false; 
+                isAnimating = false;
             }
         }
 
         // ==========================================
-        // ฟังก์ชันช่วยวาด Canvas
+        // ฟังก์ชันช่วยวาด Canvas (แก้ปัญหา iOS สีดรอปด้วยการถมขาวแทน Filter)
         // ==========================================
         function drawCurrentDOMToCanvas(ctx, scaleTo = 2048) {
             ctx.clearRect(0, 0, scaleTo, scaleTo);
@@ -847,12 +894,16 @@
             const headEl = document.getElementById('main-head');
             const headStyle = window.getComputedStyle(headEl);
             let headOffsetY = 0;
-            if (headStyle.transform && headStyle.transform !== 'none') { headOffsetY = new DOMMatrix(headStyle.transform).m42; }
+            if (headStyle.transform && headStyle.transform !== 'none') {
+                headOffsetY = new DOMMatrix(headStyle.transform).m42;
+            }
 
             const fanEl = document.getElementById('fan');
             const fanStyle = window.getComputedStyle(fanEl);
             let fanOffsetY = 0;
-            if (fanStyle.transform && fanStyle.transform !== 'none') { fanOffsetY = new DOMMatrix(fanStyle.transform).m42; }
+            if (fanStyle.transform && fanStyle.transform !== 'none') {
+                fanOffsetY = new DOMMatrix(fanStyle.transform).m42;
+            }
 
             function draw(id, offsetY) {
                 const el = document.getElementById(id);
@@ -865,9 +916,20 @@
                         if (id === 'sub-head' || id === 'c-sub-2' || id === 'c-sub-4') { finalY += parseInt(document.getElementById('sub-head-y').value) || 0; }
                         
                         if (id === 'fan') {
-                            ctx.filter = 'brightness(155%) grayscale(115%) contrast(90%)';
-                            ctx.drawImage(el, 0, finalY, 2048, 2048);
-                            ctx.filter = 'none';
+                            // 🪄 วิธีแก้ปัญหา iOS: สร้าง Canvas จำลองสร้างสีขาวทับเพื่อปรับสว่าง (แทนการใช้ Filter)
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = 2048; 
+                            tempCanvas.height = 2048;
+                            const tCtx = tempCanvas.getContext('2d');
+                            
+                            tCtx.drawImage(el, 0, finalY, 2048, 2048);
+                            
+                            // ถมสีขาวแบบบางๆ (0.45) ลงเฉพาะส่วนที่มีใบพัด เพื่อให้ภาพดูสว่างขึ้น
+                            tCtx.globalCompositeOperation = 'source-atop';
+                            tCtx.fillStyle = 'rgba(255, 255, 255, 0.45)'; 
+                            tCtx.fillRect(0, 0, 2048, 2048);
+                            
+                            ctx.drawImage(tempCanvas, 0, 0, 2048, 2048);
                         } else {
                             ctx.drawImage(el, 0, finalY, 2048, 2048);
                         }
@@ -891,6 +953,7 @@
             ctx.restore();
         }
 
+
         // --- บันทึก PNG ---
         function exportToImage() {
             playSound('click');
@@ -913,7 +976,7 @@
         }
 
         
-        // --- บันทึก GIF ---
+                // --- บันทึก GIF ---
         async function exportToGIF() {
             playSound('click');
             const btn = document.getElementById('btn-save-gif');
@@ -921,7 +984,7 @@
             
             btn.innerHTML = "Recording... ⏳";
             btn.disabled = true; document.getElementById('btn-save').disabled = true;
-            if(warningText) warningText.style.display = 'block';
+            if (warningText) warningText.style.display = 'block';
 
             try {
                 const res = await fetch('https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js');
@@ -934,41 +997,31 @@
 
                 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-                if (isFanOpen) { toggleFan(); await sleep(1800); }
+                // เช็คว่าพัดกางอยู่ไหม ถ้ากางให้สั่งหุบและรอจนเสร็จ (1.2 วิ + เผื่อนิดหน่อย)
+                if (isFanOpen) { toggleFan(); await sleep(1300); }
 
-                // หุบพัดค้างไว้ 0.2 วิ (200ms)
+                // ก่อนกาง ค้างภาพตอนหุบไว้ 0.2 วิ (200ms)
                 drawCurrentDOMToCanvas(ctx, 1024);
                 gif.addFrame(ctx, {copy: true, delay: 200});
 
+                // เริ่มทำงานปุ่ม ON: แคปภาพ 30 เฟรม เฟรมละ 40ms (ครอบคลุมตอนเลื่อนลง 0.6วิ และกาง 0.6วิ พอดีเป๊ะ)
                 toggleFan();
-                // เริ่มกางพัด (หักลบเวลาที่ใช้แคปภาพ เพื่อไม่ให้เฟรมดีเลย์และกระตุก)
                 for(let i=0; i<30; i++) { 
-                    let timeStart = Date.now();
-                    
+                    await sleep(40);
                     drawCurrentDOMToCanvas(ctx, 1024);
-                    gif.addFrame(ctx, {copy: true, delay: 60});
-                    
-                    let timeTaken = Date.now() - timeStart;
-                    let diff = 60 - timeTaken;
-                    // ถ้าระบบแคปไว ให้รอเวลาที่เหลือ แต่ถ้าแคปช้า ให้รออย่างน้อย 5ms เพื่อให้ภาพขยับต่อ
-                    await sleep(diff > 5 ? diff : 5); 
+                    gif.addFrame(ctx, {copy: true, delay: 40});
                 }
 
-                // กางสุดค้างไว้ 0.5 วิ (500ms)
+                // ภาพตอนกางสุด ค้างไว้ 0.5 วิ (500ms)
                 drawCurrentDOMToCanvas(ctx, 1024);
                 gif.addFrame(ctx, {copy: true, delay: 500});
 
+                // เริ่มทำงานปุ่ม OFF: แคปภาพ 30 เฟรม เฟรมละ 40ms (ครอบคลุมตอนหุบ 0.6วิ และเลื่อนขึ้น 0.6วิ)
                 toggleFan();
-                // เริ่มหุบพัด (หักลบเวลาแคปภาพเช่นกัน)
                 for(let i=0; i<30; i++) {
-                    let timeStart = Date.now();
-                    
+                    await sleep(40);
                     drawCurrentDOMToCanvas(ctx, 1024);
-                    gif.addFrame(ctx, {copy: true, delay: 60});
-                    
-                    let timeTaken = Date.now() - timeStart;
-                    let diff = 60 - timeTaken;
-                    await sleep(diff > 5 ? diff : 5);
+                    gif.addFrame(ctx, {copy: true, delay: 40});
                 }
 
                 btn.innerHTML = "Encoding... ⚙️";
@@ -983,7 +1036,7 @@
                     setTimeout(() => { document.body.removeChild(link); }, 100);
 
                     btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
-                    if(warningText) warningText.style.display = 'none';
+                    if (warningText) warningText.style.display = 'none';
                 });
 
                 gif.render();
@@ -992,7 +1045,7 @@
                 console.error(error);
                 alert("เกิดข้อผิดพลาดในการบันทึก GIF แนะนำให้ลองเปิดในเบราว์เซอร์ Chrome หรือ Safari ค่ะ");
                 btn.innerHTML = "SAVE GIF"; btn.disabled = false; document.getElementById('btn-save').disabled = false;
-                if(warningText) warningText.style.display = 'none';
+                if (warningText) warningText.style.display = 'none';
             }
         }
 
